@@ -1,0 +1,24 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Portfolio List{% endblock %}
+{% block content %}
+
+    <h1>My Portfolios</h1>
+    <a href="{% url 'portfolio_create' %}">Create New Portfolio</a>
+    <ul>
+        {% for portfolio in portfolios %}
+            <li>
+                <h2>
+                    <a href="{% url 'portfolio_detail' portfolio.pk %}">{{ portfolio.name }}</a>
+                </h2>
+                <ul>
+                    {% for share in portfolio.share_set.all %}
+                        <li>{{ share.name }} - {{ share.price }} - {{ share.qty }} - {{ share.date_of_purchase }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

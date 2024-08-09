@@ -1,0 +1,41 @@
+
+{% extends 'base.html' %}
+{% block title %}Portfolio List{% endblock %}
+{% load static %}
+
+{% block extra_head %}
+    <script src="{% static 'portfolio/js/add_form.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+    <h1>Add a new portfolio</h1>
+    <form id="form-container" method="POST">
+        {% csrf_token %}
+        {{ portfolio_form.as_p }}
+        {{ share_formset.management_form }}
+        
+        <div id="share-forms-container">
+            {% for form in share_formset %}
+            <div class="share-form">
+                {{ form.as_table }}
+                <button type="button" class="delete-form">Delete</button>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div id="template-form" style="display: none;">
+            {{ share_formset.empty_form.as_table }}
+            <button type="button" class="delete-form">Delete</button>
+        </div>
+        
+        <button id="add-form" type="button">Add Another Share</button>
+        <button type="submit">Save Portfolio</button>
+    </form>
+
+    <a href="{% url 'portfolio_list' %}">Back to portfolio</a>
+
+    {% block extra_js %}
+        <script src="{% static 'portfolio/js/custom.js' %}"></script>
+    {% endblock %}
+{% endblock %}

@@ -40,4 +40,8 @@ class FinanceApi:
         else:
             return []
                 
+    @staticmethod
+    def get_upcoming_dividends(ticker_name: str)-> DataFrame:
+        stock = yf.Ticker(ticker_name)
+        return stock.dividends
 

@@ -1,0 +1,20 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Dividend Calculator{% endblock %}
+{% block content %}
+
+<h1>Example Form</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>
+
+{% if dividends_table %}
+<div>
+    {{ dividends_table|safe }}
+</div>
+
+{% endif %}
+{% endblock %}

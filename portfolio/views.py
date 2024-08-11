@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import FormView, DeleteView
 from django.urls import reverse_lazy
@@ -8,13 +9,26 @@ from django.core.cache import cache
 from django.shortcuts import get_object_or_404, render
 from django.forms import modelformset_factory, inlineformset_factory
 from django.utils.translation import gettext as _
-
+from django.utils.decorators import method_decorator
+from .permissions import paid_user_required
 
 from .models import Portfolio, Share
-from .forms import PortfolioForm, ShareForm
+from .forms import PortfolioForm, ShareForm, DividendPortfolioForm
 from .finance_api import FinanceApi
 
+@method_decorator(paid_user_required, name='dispatch')
+class DividendPortfolioView(LoginRequiredMixin, FormView):
+    template_name = "portfolio/dividend_calculator.html"
+    form_class = DividendPortfolioForm
+    success_url = reverse_lazy('dividend_calculator')
 
+    def form_valid(self, form : DividendPortfolioForm):
+        context = self.get_context_data()
+        data = form.calculate_dividends_return()
+        context['dividends_table'] = data.to_html(classes='table table-striped', index=False)
+        context['form'] = form 
+        return self.render_to_response(context)
+    
 class PortfolioListView(LoginRequiredMixin, ListView):
     model = Portfolio
     template_name = "portfolio/portfolio_list.html"
@@ -24,7 +38,7 @@ class PortfolioListView(LoginRequiredMixin, ListView):
         return Portfolio.objects.filter(user=self.request.user)
 
 
-class PortfolioDetailView(DetailView):
+class PortfolioDetailView(LoginRequiredMixin, DetailView):
     model = Portfolio
     template_name = "portfolio/portfolio_detail.html"
     context_object_name = "portfolio"
@@ -65,7 +79,7 @@ class PortfolioDetailView(DetailView):
         return current_price
 
 
-class PortfolioCreateView(TemplateView):
+class PortfolioCreateView(LoginRequiredMixin, TemplateView):
     template_name = "portfolio/portfolio_create.html"
 
     def get(self, *args, **kwargs):
@@ -104,12 +118,12 @@ class PortfolioCreateView(TemplateView):
         )
 
 
-class PortfolioDeleteUpdateView(FormView):
+class PortfolioDeleteUpdateView(LoginRequiredMixin, FormView):
     template_name = "portfolio/portfolio_create.html"
     form_class = PortfolioForm
     success_url = reverse_lazy(
         "portfolio_list"
-    )  # Redirect to the list of portfolios after successful update
+    )
 
     def get(self, request, *args, **kwargs):
         portfolio = get_object_or_404(Portfolio, pk=self.kwargs.get("pk"))
@@ -152,9 +166,9 @@ class PortfolioDeleteUpdateView(FormView):
         )
 
 
-class PortfolioDeleteView(DeleteView):
+class PortfolioDeleteView(LoginRequiredMixin , DeleteView):
     model = Portfolio
     success_url = reverse_lazy(
         "portfolio_list"
-    )  # Redirect to the list of portfolios after deletion
+    )
     template_name = "portfolio/portfolio_confirm_delete.html"

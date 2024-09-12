@@ -1,0 +1,103 @@
+
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<section id="banner">
+    <div class="banner-slider">
+        <div class="banner-item bg1">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 m-auto">
+                        <div class="banner-content">
+                            <div class="banner-text text-center">
+                                <h1 class="mb-0 oswald-bold fs-40 text-uppercase text-white">Welcome to Stock Portfolio Tracker</h1>
+                                <h1 class="mb-0 oswald-bold fs-40 text-uppercase text-white">Effortlessly Track Your Investments and Dividends</h1>
+                                <p class="mb-0 open-reg fs-13 text-white">Stay on top of your stock portfolios with real-time updates,
+                                  detailed analytics, and personalized dividend calculations.</p>
+                            </div>
+                            <div class="banner-btn text-center">
+                                <a href="{% url 'portfolio_list' %}" class="cta-btn text-white oswald-med fs-16 text-uppercase">View Portfolios</a>
+                                <a href="dividend-calculator-page.html" class="cta-btn text-white oswald-med fs-16 text-uppercase">Calculate Dividends</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+  
+        <div class="banner-item bg2">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 m-auto">
+                        <div class="banner-content">
+                            <div class="banner-text text-center">
+                              <h1 class="mb-0 oswald-bold fs-40 text-uppercase text-white">Welcome to Stock Portfolio Tracker</h1>
+                              <h1 class="mb-0 oswald-bold fs-40 text-uppercase text-white">Effortlessly Track Your Investments and Dividends</h1>
+                              <p class="mb-0 open-reg fs-13 text-white">Stay on top of your stock portfolios with real-time updates,
+                                detailed analytics, and personalized dividend calculations.</p>
+                            </div>
+                            <div class="banner-btn text-center">
+                                <a href="Portfolio List Page with Portfolios.html" class="cta-btn text-white oswald-med fs-16 text-uppercase">View Portfolios</a>
+                                <a href="dividend-calculator-page.html" class="cta-btn text-white oswald-med fs-16 text-uppercase">Calculate Dividends</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+  
+        <div class="banner-item bg3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 m-auto">
+                        <div class="banner-content">
+                            <div class="banner-text text-center">
+                              <h1 class="mb-0 oswald-bold fs-40 text-uppercase text-white">Welcome to Stock Portfolio Tracker</h1>
+                              <h1 class="mb-0 oswald-bold fs-40 text-uppercase text-white">Effortlessly Track Your Investments and Dividends</h1>
+                              <p class="mb-0 open-reg fs-13 text-white">Stay on top of your stock portfolios with real-time updates,
+                                detailed analytics, and personalized dividend calculations.</p>
+                            </div>
+                            <div class="banner-btn text-center">
+                                <a href="Portfolio List Page with Portfolios.html" class="cta-btn text-white oswald-med fs-16 text-uppercase">View Portfolios</a>
+                                <a href="dividend-calculator-page.html" class="cta-btn text-white oswald-med fs-16 text-uppercase">Calculate Dividends</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+  </section>
+  
+  <!-- banner ends -->
+  
+  <!-- about starts -->
+  <section id="about">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-5">
+          <div class="about-img wow animate__animated animate__backInLeft">
+            <img src="{% static 'images/banner5.jpg' %}" class="img-fluid w-100" alt="about-image">
+          </div>
+        </div>
+        <div class="col-lg-5 offset-lg-1">
+          <div class="about-text text-center wow animate__animated animate__backInRight">
+            <h3 class="mb-0 text-uppercase oswald-reg fs-30">About us</h3>
+            <p class="mb-0 open-reg fs-16">At Stock Portfolio Tracker, we are dedicated to helping investors manage 
+              and grow their investments with ease and confidence. Our mission is to provide a comprehensive, user-friendly
+               platform that empowers users to keep track of their stock portfolios, analyze performance, and make informed 
+               investment decisions.</p>
+               <p class="open-reg fs-16">Monitor your stock portfolios with real-time updates and detailed performance analytics.
+                Use our dividend calculator to project potential income and make informed decisions.
+                Manage your investments with ease using our intuitive interface and comprehensive tools.</p>
+            <div class="about-btn text-center">
+              <a class="cta-btn text-white oswald-med fs-16 text-uppercase" href="about-us.html">Learn More</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% endblock %}

@@ -10,6 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+import os
+from dotenv import load_dotenv
+from django.contrib.auth.password_validation import NumericPasswordValidator
 from pathlib import Path
 from os.path import dirname, abspath, join
 
@@ -58,7 +61,7 @@ CONTENT_DIR = BASE_DIR / 'content'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [join(CONTENT_DIR, 'templates')],
+        'DIRS': [CONTENT_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -118,7 +121,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-from django.contrib.auth.password_validation import NumericPasswordValidator
 AUTH_USER_MODEL = 'accounts.User'
 LOGIN_URL = '/accounts/signin'
 
@@ -151,7 +153,7 @@ CACHES = {
     },
     'redis': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',  
+        'LOCATION': 'redis://127.0.0.1:6379/1',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
@@ -160,7 +162,5 @@ CACHES = {
 
 # Use the Redis cache as the default cache
 CACHES['default'] = CACHES['redis']
-import os 
-from dotenv import load_dotenv
 load_dotenv('.env')
 POLYGON_API_KEY = os.getenv("POLYGON_API_KEY")

@@ -281,34 +281,102 @@ function errValid()
      }
 }
 
-
+function displayErrors(stepNumber, errors) {
+    const errorContainer = document.getElementById(`errors-step${stepNumber}`);
+    if (errorContainer) {
+        errorContainer.innerHTML = errors.map(error => `<p class="text-danger">${error}</p>`).join('');
+    }
+}
 //create portfoilo page function are here
 
 document.addEventListener('DOMContentLoaded', function () {
     // Handle navigation between steps
+    const form = document.getElementById('portfolioForm');
+    const currentStepInput = document.getElementById('currentStep');
+
+    // Handle next step button clicks
     document.querySelectorAll('.next-step').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const currentStep = this.closest('.step');
-            const nextStep = currentStep.nextElementSibling;
-            if (nextStep && nextStep.classList.contains('step')) {
-                currentStep.style.display = 'none';
-                nextStep.style.display = 'block';
-                updateProgressBar(nextStep);
-            }
+            const stepNumber = parseInt(currentStepInput.value);
+            const formData = new FormData(form);
+            
+            // Fetch to submit form data
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value // Add CSRF token
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Move to the next step if validation is successful
+                    const nextStep = currentStep.nextElementSibling;
+                    if (nextStep && nextStep.classList.contains('step')) {
+                        currentStep.style.display = 'none';
+                        nextStep.style.display = 'block';
+                        currentStepInput.value = stepNumber + 1; // Update the step value
+                        updateProgressBar(nextStep);
+                    }
+                } else {
+                    console.log("DISPLAYING ERRORS");
+                    displayErrors(stepNumber, data.errors);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         });
     });
 
+    // Handle previous step button clicks
     document.querySelectorAll('.prev-step').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const currentStep = this.closest('.step');
             const prevStep = currentStep.previousElementSibling;
             if (prevStep && prevStep.classList.contains('step')) {
                 currentStep.style.display = 'none';
                 prevStep.style.display = 'block';
+                currentStepInput.value = parseInt(currentStepInput.value) - 1; // Update step value
                 updateProgressBar(prevStep);
             }
         });
     });
+
+    function displayErrors(stepNumber, errors) {
+        // First, clear all previous error messages
+        document.querySelectorAll(`[id^="errors-step${stepNumber}_"]`).forEach(container => {
+            container.innerHTML = ''; // Clear the container
+        });
+        console.log(errors);
+        // Iterate over the errors object
+        for (const [errorId, errorList] of Object.entries(errors)) {
+            // Find the appropriate error container
+            const container = document.querySelector(`#${errorId}`);
+            
+            if (container) {
+                errorList.forEach(error => {
+                    // Create and append error messages
+                    const errorMessage = document.createElement('small');
+                    errorMessage.className = 'text-danger';
+                    errorMessage.textContent = error;
+                    container.appendChild(errorMessage);
+                    container.appendChild(document.createElement('br'));
+                });
+            }
+        }
+    }
+
+    // Function to update the progress bar
+    function updateProgressBar(step) {
+        const steps = document.querySelectorAll('.step');
+        const stepIndex = Array.from(steps).indexOf(step);
+        const progress = ((stepIndex + 1) / steps.length) * 100;
+        document.querySelector('.progress-bar').style.width = `${progress}%`;
+    }
 
     // Handle the confirmation dialog
     const delButton = document.getElementById('delete-button');
@@ -331,8 +399,9 @@ document.addEventListener('DOMContentLoaded', function () {
             let totalForms = document.querySelector("#id_form-TOTAL_FORMS");
             let formNum = parseInt(totalForms.value);
             const template = document.getElementById('template-form').innerHTML;
-            const newFormHtml = template.replace(/__prefix__/g, formNum);
+            const newFormHtml = template.replace(/__prefix__/g, formNum);    
             const container = document.getElementById('sharesContainer');
+
             container.insertAdjacentHTML('beforeend', newFormHtml);
             formNum++;
             totalForms.value = formNum;

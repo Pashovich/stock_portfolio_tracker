@@ -72,8 +72,17 @@ class PortfolioForm(forms.ModelForm):
         model = Portfolio
         fields = ["name"]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+            visible.field.widget.attrs['placeholder'] = visible.field.label
+
 class ShareForm(forms.ModelForm):
-    date_of_purchase = forms.DateField(widget=forms.DateInput(attrs={"type": "date"}))
+    name = forms.CharField(required=True,empty_value=None)
+    price = forms.DecimalField(required=True,min_value=1)
+    qty = forms.IntegerField(required=True,min_value=1)
+    date_of_purchase = forms.DateField(required=True, widget=forms.DateInput(attrs={"type": "date"}))
 
     class Meta:
         model = Share
@@ -81,28 +90,30 @@ class ShareForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.empty_permitted = False
+        for field in self.fields.values():
+            field.required = True
+            
+
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
             visible.field.widget.attrs['placeholder'] = visible.field.label
-        # self.fields['name'].widget.attrs.update(
-        #     {
-        #         'class' : 'form-control',
-        #         'placeholder' : 'Enter Ticker name',
-        #     }
-        # )
-        # self.fields['name'].widget.attrs['class'] = 'form-control'
-        # self.fields['name'].widget.attrs['class'] = 'form-control'
 
+    def is_valid(self):
+        # Call the base class's is_valid() method
+        valid = super().is_valid()
+        return valid
+    
     def clean(self):
         cleaned_data = super().clean()
         name = cleaned_data.get("name")
         price = cleaned_data.get("price")
         qty = cleaned_data.get("qty")
         date_of_purchase = cleaned_data.get("date_of_purchase")
-
-        if price and qty and date_of_purchase:
+        if price and qty:
             if price <= 0:
                 self.add_error("price", "Price must be positive.")
+        if qty:
             if qty <= 0:
                 self.add_error("qty", "Quantity must be positive.")
 
@@ -111,7 +122,7 @@ class ShareForm(forms.ModelForm):
                 "date_of_purchase", "Date of purchase cannot be in the future."
             )
 
-        if not FinanceApi.ticker_exists(name):
+        if name and not FinanceApi.ticker_exists(name):
             self.add_error("name", "Invalid ticket name")
 
         return cleaned_data

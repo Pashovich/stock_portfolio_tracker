@@ -33,19 +33,14 @@
                     <div class="progress-bar" role="progressbar" style="width: 33%;" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
                 <form id="portfolioForm" method="POST">
+                    <input type="hidden" name="current_step" id="currentStep" value="1">
                     {% csrf_token %}
                     <!-- Step 1: Portfolio Details here -->
                     <div class="step" id="step1">
                         <div class="mb-3">
                             <label for="portfolioName" class="form-label oswald-bold">Portfolio Name</label>
-                            <input type="text" class="form-control {% if form.name.errors %}is-invalid{% endif %}" id="{{ form.name.id_for_label }}" name="{{ form.name.name }}" placeholder="Enter portfolio name" value="{{ form.name.value }}">
-                            {% if form.name.errors %}
-                                <div class="invalid-feedback">
-                                    {% for error in form.name.errors %}
-                                        <p>{{ error }}</p>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
+                            <div class="error-container" id="errors-step1_name"></div>
+                            {{portfolio_form.name}}
                             <small class="help-text fs-13">Give your portfolio a unique and descriptive name.</small>
                         </div>
                         <button type="button" class="btn btn-primary next-step">Next</button>
@@ -62,14 +57,17 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <label for="shareName" class="form-label">Share Name</label>
+                                            <div class="error-container" id="errors-step2_form-__prefix___name"></div>
                                             <input type="text" name="form-__prefix__-name" maxlength="255" class="form-control" placeholder="Name" id="id_form-__prefix__-name">
                                         </div>
                                         <div class="col-md-4">
                                             <label for="purchasePrice" class="form-label">Purchase Price</label>
+                                            <div class="error-container" id="errors-step2_form-__prefix___price"></div>
                                             <input type="number" name="form-__prefix__-price" step="0.01" class="form-control" placeholder="Price" id="id_form-__prefix__-price">
                                         </div>
                                         <div class="col-md-4">
                                             <label for="purchaseDate" class="form-label">Date of Purchase</label>
+                                            <div class="error-container" id="errors-step2_form-__prefix___date_of_purchase"></div>
                                             <input type="date" name="form-__prefix__-date_of_purchase" class="form-control" placeholder="None" id="id_form-__prefix__-date_of_purchase">
                                         </div>
                                     </div>
@@ -77,6 +75,7 @@
                                     <div class="row mt-3">
                                         <div class="col-md-4">
                                             <label for="amount" class="form-label">Amount</label>
+                                            <div class="error-container" id="errors-step2_form-__prefix___qty"></div>
                                             <input type="number" name="form-__prefix__-qty" class="form-control" placeholder="Qty" id="id_form-__prefix__-qty">
                                         </div>
                                         <div class="col-md-4 d-flex align-items-end">
@@ -95,14 +94,17 @@
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <label for="shareName" class="form-label">Share Name</label>
+                                                <div class="error-container" id="errors-step2_{{ form.prefix }}_name"></div>
                                                 {{form.name}}
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="purchasePrice" class="form-label">Purchase Price</label>
+                                                <div class="error-container" id="errors-step2_{{ form.prefix }}_price"></div>
                                                 {{form.price}}
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="purchaseDate" class="form-label">Date of Purchase</label>
+                                                <div class="error-container" id="errors-step2_{{ form.prefix }}_date_of_purchase"></div>
                                                 {{form.date_of_purchase}}
                                             </div>
                                         </div>
@@ -110,6 +112,7 @@
                                         <div class="row mt-3">
                                             <div class="col-md-4">
                                                 <label for="amount" class="form-label">Amount</label>
+                                                <div class="error-container" id="errors-step2_{{ form.prefix }}_qty"></div>
                                                 {{form.qty}}
                                             </div>
                                             <div class="col-md-4 d-flex align-items-end">

@@ -10,11 +10,13 @@ from django.shortcuts import get_object_or_404, render
 from django.forms import modelformset_factory, inlineformset_factory
 from django.utils.translation import gettext as _
 from django.utils.decorators import method_decorator
+from django.http import JsonResponse
 from .permissions import paid_user_required
 
 from .models import Portfolio, Share
 from .forms import PortfolioForm, ShareForm, DividendPortfolioForm
 from .finance_api import FinanceApi
+
 
 from datetime import datetime
 
@@ -96,24 +98,59 @@ class PortfolioCreateView(LoginRequiredMixin, TemplateView):
 
     def post(self, *args, **kwargs):
 
-        portfolio_form = PortfolioForm(self.request.POST)
-        ShareFormSet = modelformset_factory(Share, form=ShareForm, extra=1)
-        formset = ShareFormSet(data=self.request.POST)
+        current_step = self.request.POST.get('current_step')
+        if current_step == '1':
+            portfolio_form = PortfolioForm(self.request.POST)
+            if portfolio_form.is_valid():
+                return JsonResponse({"success": True})
+            # Collect form errors
+            errors = {f'errors-step1_{field}' : error_list for field, error_list in portfolio_form.errors.items()}
+            return JsonResponse({"success": False, "errors": errors})
+        
+        elif current_step == '2':
+            portfolio_form = PortfolioForm(self.request.POST)
+            ShareFormSet = modelformset_factory(Share, form=ShareForm, extra=1) 
+            formset = ShareFormSet(self.request.POST)
+            if portfolio_form.is_valid() and formset.is_valid():
+                portfolio = portfolio_form.save(commit=False)
+                portfolio.user = self.request.user
+                portfolio.save()
+                shares = formset.save(commit=False)
+                for share in shares:
+                    share.save()
+                    portfolio.shares.add(share)
 
-        if portfolio_form.is_valid() and formset.is_valid():
+                portfolio.save()
+                return JsonResponse({"success": True})
 
-            portfolio = portfolio_form.save(commit=False)
-            portfolio.user = self.request.user
-            portfolio.save()
-            shares = formset.save(commit=False)
-            for share in shares:
-                share.save()
-                portfolio.shares.add(share)
 
-            portfolio.save()
-            return redirect(
-                reverse_lazy("portfolio_detail", kwargs={"pk": portfolio.id})
-            )
+            errors = {}
+            for form in formset:
+                for field, error_list in form.errors.items():
+                    errors[f"errors-step2_{form.prefix}_{field}"] = error_list
+
+            # errors = {field : error_list for form in formset for field, error_list in form.errors.items()}
+                    
+            # errors = [f"{field.capitalize()}: {error}" for form in formset for field, error_list in form.errors.items() for error in error_list]
+            print(JsonResponse({"success": False, "errors": errors}))
+            return JsonResponse({"success": False, "errors": errors})
+        # ShareFormSet = modelformset_factory(Share, form=ShareForm, extra=1)
+        # formset = ShareFormSet(data=self.request.POST)
+
+        # if portfolio_form.is_valid() and formset.is_valid():
+
+        #     portfolio = portfolio_form.save(commit=False)
+        #     portfolio.user = self.request.user
+        #     portfolio.save()
+        #     shares = formset.save(commit=False)
+        #     for share in shares:
+        #         share.save()
+        #         portfolio.shares.add(share)
+
+        #     portfolio.save()
+        #     return redirect(
+        #         reverse_lazy("portfolio_detail", kwargs={"pk": portfolio.id})
+        #     )
 
         return self.render_to_response(
             {"portfolio_form": portfolio_form, "share_formset": formset}

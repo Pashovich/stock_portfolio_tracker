@@ -1,41 +1,142 @@
 
 {% extends 'base.html' %}
-{% block title %}Portfolio List{% endblock %}
-{% load static %}
 
-{% block extra_head %}
-    <script src="{% static 'portfolio/js/add_form.js' %}"></script>
-{% endblock %}
+
 
 
 {% block content %}
-    <h1>Add a new portfolio</h1>
-    <form id="form-container" method="POST">
-        {% csrf_token %}
-        {{ portfolio_form.as_p }}
-        {{ share_formset.management_form }}
-        
-        <div id="share-forms-container">
-            {% for form in share_formset %}
-            <div class="share-form">
-                {{ form.as_table }}
-                <button type="button" class="delete-form">Delete</button>
+
+<section id="banner"></section>
+    <div class="banner-slider">
+        <div class="banner-item bg7">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 m-auto">
+                        <div class="banner-content text-center">
+                            <div class="banner-text">
+                                <h2 class="mb-0 oswald-bold fs-40 text-uppercase text-white">Welcome to Create Your New Portfolio Tracker</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            {% endfor %}
+        </div>        
+    </div>
+  </section>
+
+  <section id="create-portfolio">
+    <div class="container mt-5">
+        <h2 class="mb-4 oswald-bold">Create New Portfolio</h2>
+        <div class="card">
+            <div class="card-body">
+                <div class="progress mb-4">
+                    <div class="progress-bar" role="progressbar" style="width: 33%;" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <form id="portfolioForm" method="POST">
+                    {% csrf_token %}
+                    <!-- Step 1: Portfolio Details here -->
+                    <div class="step" id="step1">
+                        <div class="mb-3">
+                            <label for="portfolioName" class="form-label oswald-bold">Portfolio Name</label>
+                            <input type="text" class="form-control {% if form.name.errors %}is-invalid{% endif %}" id="{{ form.name.id_for_label }}" name="{{ form.name.name }}" placeholder="Enter portfolio name" value="{{ form.name.value }}">
+                            {% if form.name.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.name.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="help-text fs-13">Give your portfolio a unique and descriptive name.</small>
+                        </div>
+                        <button type="button" class="btn btn-primary next-step">Next</button>
+                    </div>
+
+                    <!-- Step 2: Add Shares here -->
+                    <div class="step" id="step2" style="display:none;">
+                        {{ share_formset.management_form }}
+                        <div id="template-form" style="display: none;" type="text/template">
+                            <div class="share-card card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Share Details</h5>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label for="shareName" class="form-label">Share Name</label>
+                                            <input type="text" name="form-__prefix__-name" maxlength="255" class="form-control" placeholder="Name" id="id_form-__prefix__-name">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="purchasePrice" class="form-label">Purchase Price</label>
+                                            <input type="number" name="form-__prefix__-price" step="0.01" class="form-control" placeholder="Price" id="id_form-__prefix__-price">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="purchaseDate" class="form-label">Date of Purchase</label>
+                                            <input type="date" name="form-__prefix__-date_of_purchase" class="form-control" placeholder="None" id="id_form-__prefix__-date_of_purchase">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-3">
+                                        <div class="col-md-4">
+                                            <label for="amount" class="form-label">Amount</label>
+                                            <input type="number" name="form-__prefix__-qty" class="form-control" placeholder="Qty" id="id_form-__prefix__-qty">
+                                        </div>
+                                        <div class="col-md-4 d-flex align-items-end">
+                                            <button type="button" class="btn btn-outline-danger remove-share">Remove</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="sharesContainer">
+                            {% for form in share_formset %}
+                                <div class="share-card card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Share Details</h5>
+
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label for="shareName" class="form-label">Share Name</label>
+                                                {{form.name}}
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="purchasePrice" class="form-label">Purchase Price</label>
+                                                {{form.price}}
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="purchaseDate" class="form-label">Date of Purchase</label>
+                                                {{form.date_of_purchase}}
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-3">
+                                            <div class="col-md-4">
+                                                <label for="amount" class="form-label">Amount</label>
+                                                {{form.qty}}
+                                            </div>
+                                            <div class="col-md-4 d-flex align-items-end">
+                                                <button type="button" class="btn btn-outline-danger remove-share">Remove</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <button type="button" class="btn btn-secondary" id="addShareBtn">Add Share</button>
+                        <button type="button" class="btn btn-primary next-step">Next</button>
+                        <button type="button" class="btn btn-outline-secondary prev-step">Back</button>
+
+                    </div>
+
+                    <!-- Step 3: Review and Save your share-->
+                    <div class="step" id="step3" style="display:none;">
+                        <h5>Review Your Portfolio Details</h5>
+                        <div id="reviewContainer"></div>
+                        <button type="submit" class="btn btn-success">Save Portfolio</button>
+                        <button type="button" class="btn btn-outline-secondary prev-step">Back</button>
+                    </div>
+                </form>
+            </div>
         </div>
-
-        <div id="template-form" style="display: none;">
-            {{ share_formset.empty_form.as_table }}
-            <button type="button" class="delete-form">Delete</button>
-        </div>
-        
-        <button id="add-form" type="button">Add Another Share</button>
-        <button type="submit">Save Portfolio</button>
-    </form>
-
-    <a href="{% url 'portfolio_list' %}">Back to portfolio</a>
-
-    {% block extra_js %}
-        <script src="{% static 'portfolio/js/custom.js' %}"></script>
-    {% endblock %}
+    </div>
+</section>
 {% endblock %}

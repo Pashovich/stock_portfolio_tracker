@@ -23,5 +23,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('portfolios/', include('portfolio.urls')),
-    path('', RedirectView.as_view(url='/portfolios/', permanent=True)),
+    path('', RedirectView.as_view(url='/index', permanent=True)),
 ]

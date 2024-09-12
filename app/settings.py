@@ -54,7 +54,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'app.urls'
 
-CONTENT_DIR = join(BASE_DIR, 'content')
+CONTENT_DIR = BASE_DIR / 'content'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -71,10 +71,21 @@ TEMPLATES = [
     },
 ]
 
-STATIC_URL = '/static/'
+# STATIC_ROOT = join(CONTENT_DIR, "static")
+STATIC_URL = "/static/"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = CONTENT_DIR / 'media'
+
 STATICFILES_DIRS = [
-    join(BASE_DIR, 'content/static'),  # Global static directory
+    CONTENT_DIR / 'assets',  # Path to global static files
 ]
+
+
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS = [
+#     join(BASE_DIR, 'content/static'),  # Global static directory
+# ]
 
 WSGI_APPLICATION = 'app.wsgi.application'
 
@@ -126,7 +137,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

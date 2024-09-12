@@ -41,7 +41,7 @@ class FinanceApi:
             return []
                 
     @staticmethod
-    def get_upcoming_dividends(ticker_name: str)-> DataFrame:
+    def get_all_dividends(ticker_name: str)-> DataFrame:
         stock = yf.Ticker(ticker_name)
         return stock.dividends
 

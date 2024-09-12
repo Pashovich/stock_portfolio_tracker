@@ -162,3 +162,5 @@ cython_debug/
 #.idea/
 
 *.exe
+front/
+static_portfolio_test/

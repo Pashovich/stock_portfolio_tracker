@@ -3,28 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Project{% endblock %}</title>
-    {% block extra_head %}
-    <!-- Default CSS or JavaScript includes -->
-    {% endblock %}
-
+    <title>{% block title %}Stock Portfolio Tracker{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/slick.css' %}"> 
 </head>
 <body>
-    <header>
-
-    </header>
-    {% if user.is_authenticated %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-info py-0">
+        <div class="container">
+          <a class="navbar-brand py-0" href="index.html">
+            <img src="{% static 'images/logo.jpg' %}" alt="logo"> 
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active text-uppercase oswald-reg fs-16 text-white" aria-current="page" href="index.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-uppercase oswald-reg fs-16 text-white" href="about-us.html">About Us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-uppercase oswald-reg fs-16 text-white" href="empty-portfolio-list-page.html">Portfolios</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-uppercase oswald-reg fs-16 text-white" href="dividend-calculator-page.html">Dividends</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-uppercase oswald-reg fs-16 text-white" href="logindetail.html">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-uppercase oswald-reg fs-16 text-white" href="contact.html">Contact Us</a>
+              </li>
+            
+            </ul>
+            
+          </div>
+        </div>
+      </nav>
+    <!-- {% if user.is_authenticated %}
         <p>Hello, {{ user.name }}!</p>
         <p><a href="{% url 'signout' %}">Sign Out</a></p>
     {% else %}
         <p>You are not logged in.</p>
         <p><a href="{% url 'signin' %}">Sign In</a> or <a href="{% url 'signup' %}">Sign Up</a></p>
-    {% endif %}
-    <main>
+    {% endif %} -->
+
         {% block content %}
         
         {% endblock %}
-    </main>
+
+
+<section id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 m-auto">
+                <div class="footer-bottom">
+                    <p class="mb-0 open-reg fs-14 text-center">Copyright &copy; 2024 All rights reserved by <span>SPT</span>.</p>
+                </div>
+                </div>
+        </div>
+    </div>
+</section>
+
+<script src="{% static 'js/jquery-2.2.4.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/slick.min.js' %}"></script>
+<script src="{% static 'js/wow.min.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
 
 </body>
 </html>

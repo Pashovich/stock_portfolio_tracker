@@ -1,71 +1,70 @@
+
 {% extends 'base.html' %}
-{% block title %}Portfolio Detail{% endblock %}
-{% load static %}
-
-
-{% block extra_head %}
-    <link rel="stylesheet" href="{% static 'portfolio/css/styles.css' %}">
-    <script src="{% static 'portfolio/js/pop_up.js' %}"></script>
-{% endblock %}
-
-
-
+{% block title %}Portfolio List{% endblock %}
 {% block content %}
-<h2>Portfolio Detail</h2>
-<h1>{{ portfolio.name }}</h1>
+<section id="banner">
+    <div class="banner-slider">
+        <div class="banner-item bg7">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 m-auto">
+                        <div class="banner-content text-center">
+                            <div class="banner-text">
+                                <h2 class="mb-0 oswald-bold fs-40 text-uppercase text-white">Welcome to Your View Portfolio</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>        
+    </div>
+</section>
 
-<!-- Back to Portfolio List Button -->
-<form action="{% url 'portfolio_list' %}" method="get">
-    <button type="submit" class="btn btn-back">Back to Portfolio List</button>
-</form>
-<h2>Shares</h2>
-<table border="1">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Quantity</th>
-            <th>Current Price</th>
-            <th>Upcoming Dividends</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for share in shares %}
-        <tr>
-            <td>{{ share.name }}</td>
-            <td>{{ share.qty }}</td>
-            <td>${{ share.data.current_price }}</td>
-            <td>
-                <ul>
-                    {% for dividend in share.data.upcoming_dividends %}
-                    <li>
-                        {{ dividend.ticker }}: ${{ dividend.cash_amount }} ({{ dividend.currency }})<br>
-                        on {{ dividend.pay_date }} <br>Payable ${{ dividend.amount_payable }}
-                    </li>
-                    {% endfor %}
-                </ul>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="3">No shares in this portfolio.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<form action="{% url 'portfolio_edit' portfolio.id %}" method="get">
-    <button type="submit" class="btn btn-edit">Edit Portfolio</button>
-</form>
-
-
-<button id="delete-button">Delete Portfolio</button>
-<!-- Confirmation Dialog -->
-<div id="confirmation-dialog" class="confirmation-dialog">
-    <p>{{ delete_confirmation_message }}</p>
-    <form method="post" action="{% url 'portfolio_delete' portfolio.pk %}">
-        {% csrf_token %}
-        <button type="submit">Yes, Delete</button>
-        <button type="button" id="cancel-button">Cancel</button>
-    </form>
-</div>
+<section id="detail-view-port">
+    <div class="container">
+        <!-- detail view Portfolio Section -->
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div id="portfolio-section">
+              <div class="portfolio-info">
+                <h2 class="mb-0 oswald-bold fs-22 text-uppercase">Portfolio: <span class="detail-view-text">[ {{ portfolio.name }} ]</span></h2>
+                <p class="oswald-reg fs-16">Overall Profit/Loss: <span class="detail-view-text">0</span></p>
+              </div>
+    
+              <!-- Share Cards -->
+              {% for share in shares %}
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title mb-0 oswald-bold fs-22">Share: <span class="detail-view-text">{{ share.name }}</span></h5>
+                  <p class="card-text oswald-reg fs-16">Purchase Price: <span class="detail-view-text">{{ share.price }}</span></p>
+                  <p class="card-text oswald-reg fs-16">Amount: <span class="detail-view-text">{{ share.qty }}</span></p>
+                  <p class="card-text oswald-reg fs-16">Date of Purchase: <span class="detail-view-text">{{ share.date_of_purchase }}</span></p>
+                  <p class="card-text oswald-reg fs-16">Current Price: <span class="detail-view-text">{{ share.data.current_price }}</span></p>
+                  <p class="card-text oswald-reg fs-16">Upcoming Dividend Yield <span class="detail-view-text">0</span></p>
+                  <p class="card-text oswald-reg fs-16">Profit/Loss: <span class="detail-view-text">0</span></p>
+                </div>
+              </div>
+              {% endfor %}
+    
+              <!-- Edit/Delete Buttons -->
+              <div class="detail-view-btn-area">
+                <form action="{% url 'portfolio_edit' portfolio.id %}" method="get">
+                    <button class="cta-btn" id="detail-edit-port-btn">Edit Portfolio</button>
+                </form>
+                <button class="cta-btn" id="delete-button">Delete Portfolio</button>
+                <div id="confirmation-dialog" class="confirmation-dialog">
+                    <p>{{ delete_confirmation_message }}</p>
+                    <form method="post" action="{% url 'portfolio_delete' portfolio.pk %}">
+                        {% csrf_token %}
+                        <button type="submit">Yes, Delete</button>
+                        <button type="button" id="cancel-button">Cancel</button>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</section>
 
 {% endblock %}

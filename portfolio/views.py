@@ -16,6 +16,8 @@ from .models import Portfolio, Share
 from .forms import PortfolioForm, ShareForm, DividendPortfolioForm
 from .finance_api import FinanceApi
 
+from datetime import datetime
+
 @method_decorator(paid_user_required, name='dispatch')
 class DividendPortfolioView(LoginRequiredMixin, FormView):
     template_name = "portfolio/dividend_calculator.html"
@@ -65,7 +67,7 @@ class PortfolioDetailView(LoginRequiredMixin, DetailView):
     def get_upcomming_dividends(self, share: Share) -> float:
         key = f"{share.name}:upcomming_dividends"
         dividends = cache.get(key)
-        if not dividends:
+        if dividends is None:
             dividends = FinanceApi.get_upcoming_dividends(share.name)
             cache.set(key, dividends, timeout=60 * 30)
         return dividends

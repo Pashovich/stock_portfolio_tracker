@@ -72,7 +72,6 @@ class PortfolioForm(forms.ModelForm):
         model = Portfolio
         fields = ["name"]
 
-
 class ShareForm(forms.ModelForm):
     date_of_purchase = forms.DateField(widget=forms.DateInput(attrs={"type": "date"}))
 
@@ -82,6 +81,17 @@ class ShareForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+            visible.field.widget.attrs['placeholder'] = visible.field.label
+        # self.fields['name'].widget.attrs.update(
+        #     {
+        #         'class' : 'form-control',
+        #         'placeholder' : 'Enter Ticker name',
+        #     }
+        # )
+        # self.fields['name'].widget.attrs['class'] = 'form-control'
+        # self.fields['name'].widget.attrs['class'] = 'form-control'
 
     def clean(self):
         cleaned_data = super().clean()

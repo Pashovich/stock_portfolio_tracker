@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, render
 from django.forms import modelformset_factory, inlineformset_factory
 from django.utils.translation import gettext as _
 from django.utils.decorators import method_decorator
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from .permissions import paid_user_required
 
 from .models import Portfolio, Share
@@ -91,13 +91,12 @@ class PortfolioCreateView(LoginRequiredMixin, TemplateView):
         portfolio_form = PortfolioForm()
         ShareFormSet = modelformset_factory(Share, form=ShareForm, extra=1)
         formset = ShareFormSet(queryset=Share.objects.none())
-
         return self.render_to_response(
-            {"portfolio_form": portfolio_form, "share_formset": formset}
+            {"portfolio_form": portfolio_form, "share_formset": formset, "page_title" : 'Create New Portfolio'}
         )
 
     def post(self, *args, **kwargs):
-
+        print("CREATING")
         current_step = self.request.POST.get('current_step')
         if current_step == '1':
             portfolio_form = PortfolioForm(self.request.POST)
@@ -112,6 +111,19 @@ class PortfolioCreateView(LoginRequiredMixin, TemplateView):
             ShareFormSet = modelformset_factory(Share, form=ShareForm, extra=1) 
             formset = ShareFormSet(self.request.POST)
             if portfolio_form.is_valid() and formset.is_valid():
+                return JsonResponse({"success": True})
+
+            errors = {}
+            for form in formset:
+                for field, error_list in form.errors.items():
+                    errors[f"errors-step2_{form.prefix}_{field}"] = error_list
+            
+            return JsonResponse({"success": False, "errors": errors})
+        else:
+            portfolio_form = PortfolioForm(self.request.POST)
+            ShareFormSet = modelformset_factory(Share, form=ShareForm, extra=1) 
+            formset = ShareFormSet(self.request.POST)
+            if portfolio_form.is_valid() and formset.is_valid():
                 portfolio = portfolio_form.save(commit=False)
                 portfolio.user = self.request.user
                 portfolio.save()
@@ -121,43 +133,18 @@ class PortfolioCreateView(LoginRequiredMixin, TemplateView):
                     portfolio.shares.add(share)
 
                 portfolio.save()
-                return JsonResponse({"success": True})
+                return redirect(
+                    reverse_lazy("portfolio_detail", kwargs={"pk": portfolio.id})
+                )
+            else:
+                errors = {}
+                for form in formset:
+                    for field, error_list in form.errors.items():
+                        errors[f"errors-step2_{form.prefix}_{field}"] = error_list
+                return HttpResponse()
 
 
-            errors = {}
-            for form in formset:
-                for field, error_list in form.errors.items():
-                    errors[f"errors-step2_{form.prefix}_{field}"] = error_list
-
-            # errors = {field : error_list for form in formset for field, error_list in form.errors.items()}
-                    
-            # errors = [f"{field.capitalize()}: {error}" for form in formset for field, error_list in form.errors.items() for error in error_list]
-            print(JsonResponse({"success": False, "errors": errors}))
-            return JsonResponse({"success": False, "errors": errors})
-        # ShareFormSet = modelformset_factory(Share, form=ShareForm, extra=1)
-        # formset = ShareFormSet(data=self.request.POST)
-
-        # if portfolio_form.is_valid() and formset.is_valid():
-
-        #     portfolio = portfolio_form.save(commit=False)
-        #     portfolio.user = self.request.user
-        #     portfolio.save()
-        #     shares = formset.save(commit=False)
-        #     for share in shares:
-        #         share.save()
-        #         portfolio.shares.add(share)
-
-        #     portfolio.save()
-        #     return redirect(
-        #         reverse_lazy("portfolio_detail", kwargs={"pk": portfolio.id})
-        #     )
-
-        return self.render_to_response(
-            {"portfolio_form": portfolio_form, "share_formset": formset}
-        )
-
-
-class PortfolioDeleteUpdateView(LoginRequiredMixin, FormView):
+class PortfolioDeleteUpdateView(PortfolioCreateView):
     template_name = "portfolio/portfolio_create.html"
     form_class = PortfolioForm
     success_url = reverse_lazy(
@@ -170,39 +157,62 @@ class PortfolioDeleteUpdateView(LoginRequiredMixin, FormView):
         ShareFormSet = modelformset_factory(Share, form=ShareForm, extra=0)
         formset = ShareFormSet(queryset=portfolio.shares.all())
         return self.render_to_response(
-            self.get_context_data(portfolio_form=form, share_formset=formset)
+            self.get_context_data(portfolio_form=form, share_formset=formset, page_title = 'Update Portfolio')
         )
+    
 
-    def post(self, request, *args, **kwargs):
+    def post(self, *args, **kwargs):
         portfolio = get_object_or_404(Portfolio, pk=self.kwargs.get("pk"))
-        form = PortfolioForm(request.POST, instance=portfolio)
-        ShareFormSet = modelformset_factory(Share, form=ShareForm, extra=0)
-        formset = ShareFormSet(data=self.request.POST)
-        if form.is_valid() and formset.is_valid():
-            portfolio = form.save()
-            existing_shares = set(portfolio.shares.all())
-            updated_shares = set()
+        form = PortfolioForm(self.request.POST, instance=portfolio)
+        current_step = self.request.POST.get('current_step')
+        if current_step == '1':
+            if form.is_valid():
+                return JsonResponse({"success": True})
+            # Collect form errors
+            errors = {f'errors-step1_{field}' : error_list for field, error_list in portfolio_form.errors.items()}
+            return JsonResponse({"success": False, "errors": errors})
+        
+        elif current_step == '2':
+            ShareFormSet = modelformset_factory(Share, form=ShareForm, extra=1) 
+            formset = ShareFormSet(self.request.POST)
+            if form.is_valid() and formset.is_valid():
+                return JsonResponse({"success": True})
+
+            errors = {}
             for form in formset:
-                if form.cleaned_data.get("name"):
-                    share = form.save(commit=False)
-                    share.save()
-                    updated_shares.add(share)
+                for field, error_list in form.errors.items():
+                    errors[f"errors-step2_{form.prefix}_{field}"] = error_list
+            
+            return JsonResponse({"success": False, "errors": errors})
+        else:
+            ShareFormSet = modelformset_factory(Share, form=ShareForm, extra=1) 
+            formset = ShareFormSet(self.request.POST)
+            if form.is_valid() and formset.is_valid():
+                portfolio = form.save()
+                existing_shares = set(portfolio.shares.all())
+                updated_shares = set()
+                for form in formset:
+                    if form.cleaned_data.get("name"):
+                        share = form.save(commit=False)
+                        share.save()
+                        updated_shares.add(share)
 
-            shares_to_remove = existing_shares - updated_shares
+                shares_to_remove = existing_shares - updated_shares
 
-            portfolio.shares.set(updated_shares)
+                portfolio.shares.set(updated_shares)
 
-            portfolio.shares.remove(*shares_to_remove)
+                portfolio.shares.remove(*shares_to_remove)
 
-            portfolio.save()
-
-            return redirect(
-                reverse_lazy("portfolio_detail", kwargs={"pk": portfolio.id})
-            )
-
-        return self.render_to_response(
-            self.get_context_data(portfolio_form=form, share_formset=formset)
-        )
+                portfolio.save()
+                return redirect(
+                    reverse_lazy("portfolio_detail", kwargs={"pk": portfolio.id})
+                )
+            else:
+                errors = {}
+                for form in formset:
+                    for field, error_list in form.errors.items():
+                        errors[f"errors-step2_{form.prefix}_{field}"] = error_list
+                return HttpResponse()
 
 
 class PortfolioDeleteView(LoginRequiredMixin , DeleteView):

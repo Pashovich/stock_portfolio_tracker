@@ -26,7 +26,7 @@
 
   <section id="create-portfolio">
     <div class="container mt-5">
-        <h2 class="mb-4 oswald-bold">Create New Portfolio</h2>
+        <h2 class="mb-4 oswald-bold">{{page_title}}</h2>
         <div class="card">
             <div class="card-body">
                 <div class="progress mb-4">
@@ -114,6 +114,7 @@
                                                 <label for="amount" class="form-label">Amount</label>
                                                 <div class="error-container" id="errors-step2_{{ form.prefix }}_qty"></div>
                                                 {{form.qty}}
+                                                {{ form.id }}
                                             </div>
                                             <div class="col-md-4 d-flex align-items-end">
                                                 <button type="button" class="btn btn-outline-danger remove-share">Remove</button>

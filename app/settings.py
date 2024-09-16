@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import os
-from dotenv import load_dotenv
 from django.contrib.auth.password_validation import NumericPasswordValidator
 from pathlib import Path
 from os.path import dirname, abspath, join
@@ -153,7 +152,7 @@ CACHES = {
     },
     'redis': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'LOCATION': f'redis://{os.getenv("REDIS_HOST","127.0.0.1")}:6379/1',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
@@ -162,5 +161,8 @@ CACHES = {
 
 # Use the Redis cache as the default cache
 CACHES['default'] = CACHES['redis']
-load_dotenv('.env')
+if not os.getenv('POLYGON_API_KEY'):
+    from dotenv import load_dotenv
+    load_dotenv('.env')
+
 POLYGON_API_KEY = os.getenv("POLYGON_API_KEY")

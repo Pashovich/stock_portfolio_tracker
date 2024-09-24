@@ -244,7 +244,7 @@ class PortfolioDeleteUpdateView(PortfolioCreateView):
                 return JsonResponse({"success": True})
             # Collect form errors
             errors = {f'errors-step1_{field}': error_list for field,
-                      error_list in portfolio_form.errors.items()}
+                      error_list in form.errors.items()}
             return JsonResponse({"success": False, "errors": errors})
 
         elif current_step == '2':

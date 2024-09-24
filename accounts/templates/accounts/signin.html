@@ -1,16 +1,56 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Sign In</title>
-</head>
-<body>
-    <h1>Sign In</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Sign In</button>
-    </form>
-    <p>Don't have an account?</p>
-    <a href="{% url 'signup' %}">Sign Up</a>  <!-- Add this line for the sign-up button -->
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Sign in{% endblock %}
+{% block content %}
+{% load static %}
+
+<section id="team-title"></section>
+    <div class="container">
+      <div class="team-title text-center">
+        <h1 class="mb-0 oswald-reg fs-22 text-uppercase">Welcom to Sign in</h1>
+        <img src="{% static 'images/title-icon.jpg' %}" alt="team-icon">
+      </div>
+    </div>
+  </section>
+  
+  <!-- team title ends -->
+
+  <!-- Login-form starts -->
+
+<section id="Login-form"> 
+    <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-3">
+            <div class="contact-title oswald-bold">
+              <h1>Hello ! Sign in here</h1>
+            </div>
+          </div>
+  
+           <div class="col-lg-6">
+              <div class="contact-form">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        {{form.email}}
+                        <small id="uEmailErr"></small>
+                    </div>
+  
+                    <div class="input-group">
+                        {{form.password}}
+                        <small id="passErr"></small>
+                    </div>
+  
+                    <button type="submit">Sign in</button>
+
+                    <div class="form-footer mt-10">
+                        <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+                    </div>
+                    
+                </form>
+             </div>
+           </div>
+        </div>
+  
+    </div>
+  </section>
+
+{% endblock %}

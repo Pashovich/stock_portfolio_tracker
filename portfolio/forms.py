@@ -1,6 +1,6 @@
 from typing import Any
 from django import forms
-from .models import Portfolio, Share
+from .models import Portfolio, Share, DividendCalculation
 from django.forms import modelformset_factory
 from .finance_api import FinanceApi
 from datetime import date
@@ -16,38 +16,71 @@ types_ = {
 }
 
 
-class DividendPortfolioForm(forms.Form):
+class DividendPortfolioForm(forms.ModelForm):
+
+    class Meta:
+        model = DividendCalculation
+        fields = ['ticket_name', 'capital',
+                  'lookback_period', 'calculation_period']
+
     CHOICES = [
         ("2y", "2y"),
         ("1y", "1y"),
         ("6m", "6m"),
     ]
-    ticker_name = forms.CharField(max_length=100, required=True)
-    capital = forms.IntegerField(min_value=1, required=True)
-    period = forms.ChoiceField(choices=CHOICES, required=True)
+    ticket_name = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(
+            attrs={'class': 'form-control', 'placeholder': 'Enter Ticket Name'})
+    )
 
-    def clean_ticker_name(self):
-        ticker_name = self.cleaned_data.get("ticker_name")
-        if not FinanceApi.ticker_exists(ticker_name):
-            self.add_error("ticker_name", "Invalid ticket name")
-        return ticker_name
+    capital = forms.FloatField(
+        min_value=1,
+        required=True,
+        widget=forms.NumberInput(
+            attrs={'class': 'form-control', 'placeholder': 'Enter Initial Capital'})
+    )
 
-    def calculate_dividends_return(self, lookback_period = 365*5) -> pd.DataFrame:
-        ticker_name: str = self.cleaned_data.get("ticker_name")
+    lookback_period = forms.ChoiceField(
+        choices=CHOICES,
+        required=True,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+    calculation_period = forms.ChoiceField(
+        choices=CHOICES,
+        required=True,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+
+    def check_ticker_name(self):
+        ticket_name = self.cleaned_data.get("ticket_name")
+        if not FinanceApi.ticker_exists(ticket_name):
+            self.add_error("ticket_name", "Invalid ticket name")
+            return False
+        return True
+
+    def calculate_dividends_return(self, lookback_period=365*5) -> pd.DataFrame:
+        ticker_name: str = self.cleaned_data.get("ticket_name")
         capital: int = self.cleaned_data.get("capital")
-        period: str = self.cleaned_data.get("period")
+        period: str = self.cleaned_data.get("calculation_period")
 
-        dividends = FinanceApi.get_upcoming_dividends(ticker_name)
-
+        dividends = FinanceApi.get_all_dividends(ticker_name)
+        if dividends.empty:
+            self.add_error(None, 'Unable to retrive dividends data for provided ticket name.')
+            return pd.DataFrame()
         tz = pytz.UTC
 
         if "y" in period:
-            forecast_period = 12 * int(period.replace('y',''))
+            forecast_period = 12 * int(period.replace('y', ''))
         elif 'm' in period:
-            forecast_period = int(period.replace('m',''))
+            forecast_period = int(period.replace('m', ''))
 
         dividends.index = dividends.index.tz_localize(None)
-        dividends = dividends.loc[dividends.index >= pd.Timestamp.now() - pd.Timedelta(days = lookback_period)]
+        dividends = dividends.loc[dividends.index >= pd.Timestamp.now(
+        ) - pd.Timedelta(days=lookback_period)]
         dividends_by_month = dividends.groupby(dividends.index.month).mean()
         today = pd.Timestamp.now()
         forecast = []
@@ -78,11 +111,13 @@ class PortfolioForm(forms.ModelForm):
             visible.field.widget.attrs['class'] = 'form-control'
             visible.field.widget.attrs['placeholder'] = visible.field.label
 
+
 class ShareForm(forms.ModelForm):
-    name = forms.CharField(required=True,empty_value=None)
-    price = forms.DecimalField(required=True,min_value=1)
-    qty = forms.IntegerField(required=True,min_value=1)
-    date_of_purchase = forms.DateField(required=True, widget=forms.DateInput(attrs={"type": "date"}))
+    name = forms.CharField(required=True, empty_value=None)
+    price = forms.DecimalField(required=True, min_value=1)
+    qty = forms.IntegerField(required=True, min_value=1)
+    date_of_purchase = forms.DateField(
+        required=True, widget=forms.DateInput(attrs={"type": "date"}))
 
     class Meta:
         model = Share
@@ -93,7 +128,6 @@ class ShareForm(forms.ModelForm):
         self.empty_permitted = False
         for field in self.fields.values():
             field.required = True
-            
 
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
@@ -103,7 +137,7 @@ class ShareForm(forms.ModelForm):
         # Call the base class's is_valid() method
         valid = super().is_valid()
         return valid
-    
+
     def clean(self):
         cleaned_data = super().clean()
         name = cleaned_data.get("name")

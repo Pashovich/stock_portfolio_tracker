@@ -1,0 +1,48 @@
+
+{% extends 'base.html' %}
+{% block title %}Contact{% endblock %}
+{% block content %}
+{% load static %}
+
+<!-- Login in form starts -->
+<section id="contact"> 
+  <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-3">
+          <div class="contact-title oswald-bold">
+            <h1>Contact Us</h1>
+          </div>
+        </div>
+
+         <div class="col-lg-6">
+            <div class="contact-form">
+              <form>
+                  <div class="input-group">
+                      <input type="text" placeholder="Your Full Name" id="uName">
+                      <small id="uNameErr"></small>
+                  </div>
+                  
+                  <div class="input-group">
+                      <input type="email" placeholder="Your Email" id="uEmail">
+                      <small id="uEmailErr"></small>
+                  </div>
+
+                  <div class="input-group">
+                    <input type="tel" placeholder="Your Phone Number" id="utel">
+                    <small id="utelErr"></small>
+                </div>
+                  
+                  <div class="input-group">
+                      <textarea name="message" placeholder="Your Message" id="mess"></textarea>
+                      <small id="messErr"></small>
+                  </div>
+
+                  <button onclick="return subm();">Submit</button>
+              </form>
+           </div>
+         </div>
+      </div>
+
+  </div>
+</section>
+{% endblock %}

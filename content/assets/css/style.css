@@ -402,9 +402,26 @@ padding-top: 20px;
      loginpart css ends
 ======================== */
 
+html, body {
+    height: 100%;
+    margin: 0;
+}
 
-#footer{
-    background: var(--cl7);
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensure the body takes up at least the full viewport height */
+}
+
+.content {
+    flex: 1; /* This pushes the footer to the bottom */
+}
+
+#footer {
+    background: var(--cl7);  
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
 }
 
 #footer .footer-bottom p{

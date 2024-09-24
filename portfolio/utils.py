@@ -1,15 +1,20 @@
 import requests
+from django.core.cache import cache
+from .models import Share
+from .finance_api import FinanceApi
 
-def fetch_share_names():
-    return [
-        (1,'APPLE'),
-        (2,'AMAZ'),
-        (3,'MIC'),
-        (4,'TSL'),
-    ]
-    # response = requests.get('https://api.example.com/shares')  # Replace with your API URL
-    # if response.status_code == 200:
-    #     data = response.json()
-    #     return [(share['id'], share['name']) for share in data]  # Adjust according to the API response structure
-    # else:
-    #     return []
+def get_upcomming_dividends(share: Share) -> float:
+    key = f"{share.name}:upcomming_dividends"
+    dividends = cache.get(key)
+    if dividends is None:
+        dividends = FinanceApi.get_upcoming_dividends(share.name)
+        cache.set(key, dividends, timeout=60 * 30)
+    return dividends
+
+def get_current_price(share: Share) -> float:
+    key = f"{share.name}:current_price"
+    current_price = cache.get(key)
+    if not current_price:
+        current_price = FinanceApi.get_stock_price(share.name)
+        cache.set(key, current_price, timeout=120)
+    return current_price

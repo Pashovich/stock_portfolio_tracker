@@ -17,7 +17,7 @@
                             </div>
                             <div class="banner-btn text-center">
                                 <a href="{% url 'portfolio_list' %}" class="cta-btn text-white oswald-med fs-16 text-uppercase">View Portfolios</a>
-                                <a href="dividend-calculator-page.html" class="cta-btn text-white oswald-med fs-16 text-uppercase">Calculate Dividends</a>
+                                <a href="{% url 'portfolio_calculator' %}" class="cta-btn text-white oswald-med fs-16 text-uppercase">Calculate Dividends</a>
                             </div>
                         </div>
                     </div>
@@ -37,8 +37,8 @@
                                 detailed analytics, and personalized dividend calculations.</p>
                             </div>
                             <div class="banner-btn text-center">
-                                <a href="Portfolio List Page with Portfolios.html" class="cta-btn text-white oswald-med fs-16 text-uppercase">View Portfolios</a>
-                                <a href="dividend-calculator-page.html" class="cta-btn text-white oswald-med fs-16 text-uppercase">Calculate Dividends</a>
+                                <a href="{% url 'portfolio_list' %}" class="cta-btn text-white oswald-med fs-16 text-uppercase">View Portfolios</a>
+                                <a href="{% url 'portfolio_calculator' %}" class="cta-btn text-white oswald-med fs-16 text-uppercase">Calculate Dividends</a>
                             </div>
                         </div>
                     </div>
@@ -58,8 +58,8 @@
                                 detailed analytics, and personalized dividend calculations.</p>
                             </div>
                             <div class="banner-btn text-center">
-                                <a href="Portfolio List Page with Portfolios.html" class="cta-btn text-white oswald-med fs-16 text-uppercase">View Portfolios</a>
-                                <a href="dividend-calculator-page.html" class="cta-btn text-white oswald-med fs-16 text-uppercase">Calculate Dividends</a>
+                                <a href="{% url 'portfolio_list' %}" class="cta-btn text-white oswald-med fs-16 text-uppercase">View Portfolios</a>
+                                <a href="{% url 'portfolio_calculator' %}" class="cta-btn text-white oswald-med fs-16 text-uppercase">Calculate Dividends</a>
                             </div>
                         </div>
                     </div>
@@ -92,7 +92,7 @@
                 Use our dividend calculator to project potential income and make informed decisions.
                 Manage your investments with ease using our intuitive interface and comprehensive tools.</p>
             <div class="about-btn text-center">
-              <a class="cta-btn text-white oswald-med fs-16 text-uppercase" href="about-us.html">Learn More</a>
+              <a class="cta-btn text-white oswald-med fs-16 text-uppercase" href="{% url 'about_us' %}">Learn More</a>
             </div>
           </div>
         </div>

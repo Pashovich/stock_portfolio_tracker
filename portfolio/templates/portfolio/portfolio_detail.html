@@ -28,7 +28,7 @@
             <div id="portfolio-section">
               <div class="portfolio-info">
                 <h2 class="mb-0 oswald-bold fs-22 text-uppercase">Portfolio: <span class="detail-view-text">[ {{ portfolio.name }} ]</span></h2>
-                <p class="oswald-reg fs-16">Overall Profit/Loss: <span class="detail-view-text">0</span></p>
+                <p class="oswald-reg fs-16">Overall Profit/Loss: <span class="detail-view-text">{{profit_overall}}</span></p>
               </div>
     
               <!-- Share Cards -->
@@ -40,14 +40,15 @@
                   <p class="card-text oswald-reg fs-16">Amount: <span class="detail-view-text">{{ share.qty }}</span></p>
                   <p class="card-text oswald-reg fs-16">Date of Purchase: <span class="detail-view-text">{{ share.date_of_purchase }}</span></p>
                   <p class="card-text oswald-reg fs-16">Current Price: <span class="detail-view-text">{{ share.data.current_price }}</span></p>
-                  <p class="card-text oswald-reg fs-16">Upcoming Dividend Yield <span class="detail-view-text">0</span></p>
-                  <p class="card-text oswald-reg fs-16">Profit/Loss: <span class="detail-view-text">0</span></p>
+                  <p class="card-text oswald-reg fs-16">Upcoming Dividend Yield <span class="detail-view-text">{{ share.data.upcoming_dividends }}</span></p>
+                  <p class="card-text oswald-reg fs-16">Profit/Loss: <span class="detail-view-text">{{ share.data.profit }}</span></p>
                 </div>
               </div>
               {% endfor %}
     
               <!-- Edit/Delete Buttons -->
               <div class="detail-view-btn-area">
+                <a href="{% url 'portfolio_list' %}"><button class="btn btn-secondary">Back to Reports</button></a>
                 <form action="{% url 'portfolio_edit' portfolio.id %}" method="get">
                     <button class="cta-btn" id="detail-edit-port-btn">Edit Portfolio</button>
                 </form>

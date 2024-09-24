@@ -1,14 +1,73 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Sign Up</title>
-</head>
-<body>
-    <h2>Sign Up</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Sign Up</button>
-    </form>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Sign in{% endblock %}
+{% block content %}
+{% load static %}
+<section id="team-title"></section>
+    <div class="container">
+      <div class="team-title text-center">
+        <h1 class="mb-0 oswald-reg fs-22 text-uppercase">Welcome to Sign up</h1>
+        <img src="{% static 'images/title-icon.jpg' %}" alt="team-icon">
+      </div>
+    </div>
+  </section>
+
+  <section id="Login-form"> 
+    <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-3">
+            <div class="contact-title oswald-bold">
+              <h1>Create account here</h1>
+            </div>
+          </div>
+  
+           <div class="col-lg-6">
+              <div class="contact-form">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        {{form.name}}
+                        
+                        <small id="uNameErr"></small>
+                    </div>
+                    
+                    <div class="input-group">
+                        {{form.email}}
+                        <small id="emailErr"></small>
+                    </div>
+                    <small>{{ form.password1.help_text }}</small>
+                    <div class="input-group">
+                        {{form.password1}}
+                        
+                        {% if form.password1.errors %}
+
+                        {% for error in form.password1.errors %}
+                            <small id="passErr">{{ error }}</small>
+                        {% endfor %}
+
+                        {% endif %}
+                    </div>
+                    
+                    <div class="input-group">
+                        {{form.password2}}
+                        {% if form.password2.errors %}
+
+                        {% for error in form.password2.errors %}
+                        <small id="rePassErr">{{ error }}</small>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+  
+                    <button type="submit">Sign up</button>
+
+                    <div class="form-footer mt-10">
+                        <p>Already have an account? <a href="{% url 'signin' %}">Sign In</a></p>
+                    </div>
+                </form>
+             </div>
+           </div>
+        </div>
+  
+    </div>
+  </section>
+
+{% endblock %}

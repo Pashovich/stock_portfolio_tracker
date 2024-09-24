@@ -1,0 +1,123 @@
+
+{% extends 'base.html' %}
+{% block title %}About Us{% endblock %}
+{% block content %}
+{% load static %}
+
+<!-- banner starts -->
+
+<section id="banner">
+  <div class="banner-slider">
+      <div class="banner-item bg4">
+          <div class="container">
+              <div class="row">
+                  <div class="col-lg-6 m-auto">
+                      <div class="banner-content text-center">
+                          <div class="banner-text">
+                              <h2 class="mb-0 oswald-bold fs-40 text-uppercase text-white">Welcome to Stock Portfolio Tracker</h2>
+                          </div>
+                          <div class="banner-btn text-center">
+                            <a href="{% url 'portfolio_list' %}" class="cta-btn text-white oswald-med fs-16 text-uppercase">View Portfolios</a>
+                            <a href="{% url 'portfolio_calculator' %}" class="cta-btn text-white oswald-med fs-16 text-uppercase">Calculate Dividends</a>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>        
+  </div>
+</section>
+
+<!-- banner ends -->
+
+<!-- team starts -->
+<section id="team-title">
+  <div class="container">
+    <div class="team-title text-center">
+      <h1 class="mb-0 oswald-reg fs-22 text-uppercase">our team member</h1>
+      <img src="{% static 'images/title-icon.jpg' %}" alt="team-icon">
+    </div>
+  </div>
+</section>
+
+<!-- team title ends -->
+
+ <section id="team">
+  
+  <div class="container team">
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="team-item">
+          <div class="team-img position-relative text-center">
+            <img src="{% static 'images/team-member1.jpg' %}"class="img-fluid w-100" alt="team-member">
+            <div class="team-overlay">
+              <div class="team-icon d-flex flex-column align-items-end">
+                <ul>
+                  <li><a href="#"><i class="fab fa-facebook-f fs-16 text-white"></i></a></li>
+                  <li><a href="#"><i class="fab fa-twitter fs-16 text-white"></i></a></li>
+                  <li><a href="#"><i class="fab fa-linkedin-in fs-16 text-white"></i></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="team-text text-center">
+            <h3 class="mb-0 oswald-reg fs-14 text-uppercase">Pavel Sidorov</h3>
+            <h4 class="mb-0 oswald-reg fs-14 text-capitalize">Web Developer</h4>
+            <p class="mb-0 open-reg fs-13">As a scrum master and web developer, I will lead the project, ensure team members 
+              follow methodology, and produce high-quality web applications meeting client requirements.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="team-item">
+          <div class="team-img position-relative text-center">
+            <img src="{% static 'images/team-member2.jpg' %}" class="img-fluid w-100" alt="team-member">
+            <div class="team-overlay">
+              <div class="team-icon d-flex flex-column align-items-end">
+                <ul>
+                  <li><a href="#"><i class="fab fa-facebook-f fs-16 text-white"></i></a></li>
+                  <li><a href="#"><i class="fab fa-twitter fs-16 text-white"></i></a></li>
+                  <li><a href="#"><i class="fab fa-linkedin-in fs-16 text-white"></i></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="team-text text-center">
+            <h3 class="mb-0 oswald-reg fs-14 text-uppercase">Razia Sultana</h3>
+            <h4 class="mb-0 oswald-reg fs-14 text-capitalize">Project Manager</h4>
+            <p class="mb-0 open-reg fs-13">As a project manager, I will oversee project deliverables, ensure quality, 
+              and meet client requirements, ensuring client satisfaction and potential future projects.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="team-item">
+          <div class="team-img position-relative text-center">
+            <img src="{% static 'images/team-member3.jpg' %}" class="img-fluid w-100" alt="team-member">
+            <div class="team-overlay">
+              <div class="team-icon d-flex flex-column align-items-end">
+                <ul>
+                  <li><a href="#"><i class="fab fa-facebook-f fs-16 text-white"></i></a></li>
+                  <li><a href="#"><i class="fab fa-twitter fs-16 text-white"></i></a></li>
+                  <li><a href="#"><i class="fab fa-linkedin-in fs-16 text-white"></i></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="team-text text-center">
+            <h3 class="mb-0 oswald-reg fs-14 text-uppercase">Anika Nahar Eshita</h3>
+            <h4 class="mb-0 oswald-reg fs-14 text-capitalize">Web Designer</h4>
+            <p class="mb-0 open-reg fs-13">The role involves completing high-quality client-required tasks, 
+              collaborating with the team to deliver a successful project, aiming to satisfy the client and 
+              secure future projects.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  
+</section>
+{% endblock %}

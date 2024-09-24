@@ -1,0 +1,34 @@
+
+{% extends 'base.html' %}
+{% block title %}Dividend Reports{% endblock %}
+{% block content %}
+
+<section id="detail-cal-report-page" class="detail-cal-report-content-section">
+  <div class="container">
+      <div class="row justify-content-center">
+          <div class="col-lg-8 mb-4">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="mb-0 oswald-reg fs-25">Dividend Calculator Reports</h3>
+                </div>
+                <div class="card-body" id="reports-container">
+                  {% for report in reports %}
+                  <div class="report-item">
+                    <div>
+                      <p class="oswald-reg fs-16">Report: {{report.ticket_name}}<span> - ${{report.capital}} - {{report.calculation_period}} - {{report.created_at}}</span></p>
+                    </div>
+                    <a href="{% url 'portfolio_calculator_detailt_view' report.pk %}"><button class="cta-btn">View Report</button></a>
+                  </div>
+                  {% endfor %}
+                </div>
+                <div class="card-footer text-center">
+                  <a href="{% url 'portfolio_calculator' %}" class="cta-btn text-white oswald-med fs-16">To Calculator</a>
+              </div>
+              </div>
+              
+            </div>
+      </div>
+  </div>
+</section>
+
+{% endblock %}

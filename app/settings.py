@@ -166,3 +166,5 @@ if not os.getenv('POLYGON_API_KEY'):
     load_dotenv('.env')
 
 POLYGON_API_KEY = os.getenv("POLYGON_API_KEY")
+TIME_ZONE = 'Australia/Sydney'
+USE_TZ = True

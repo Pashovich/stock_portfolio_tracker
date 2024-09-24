@@ -1,0 +1,64 @@
+
+{% extends 'base.html' %}
+{% block title %}Dividend Calculator{% endblock %}
+{% block content %}
+
+
+<section id="divide-cal-report-detail-page" class="divi-cal-rep-detail-content-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div id="details-section">
+
+          <div class="card">
+            <div class="card-header" id="details-header">
+              <h3 class="mb-0 oswald-reg fs-25">Dividend Payment Details - {{report.ticket_name}}</h3>
+            </div>
+
+            <div class="card-body" id="details-body">
+              <p class="oswald-med fs-16">Initial Capital: <span>${{report.capital}}</span></p>
+              <p class="oswald-med fs-16">Calculation Period: <span>{{report.calculation_period}}</span></p>
+              <p class="oswald-med fs-16">Lookback Period: <span>{{report.lookback_period}}</span></p>
+              <p class="oswald-med fs-16">Date Generated: <span>{{report.created_at}}</span></p>
+              
+              <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Payment Date</th>
+                        <th>Average Dividend Yield</th>
+                        <th>Payment Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in data %}
+                    <tr>
+                        <td>{{ item.payment_date }}</td>
+                        <td>{{ item.avg_dividend_yield }}</td>
+                        <td>{{ item.payment_amount }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>             
+          </div>
+
+          <div class="d-flex justify-content-center">
+            <a href="{% url 'portfolio_calculator_list_view' %}"><button class="btn btn-secondary">Back to Reports</button></a>
+            <button class="btn btn-info" onclick="downloadReport()">Download Report</button>
+            <button class="cta-btn" id="delete-button">Delete Portfolio</button>
+            <div id="confirmation-dialog" class="confirmation-dialog">
+                <p>{{ delete_confirmation_message }}</p>
+                <form method="post" action="{% url 'report_delete' report.pk %}">
+                    {% csrf_token %}
+                    <button type="submit">Yes, Delete</button>
+                    <button type="button" id="cancel-button">Cancel</button>
+                </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

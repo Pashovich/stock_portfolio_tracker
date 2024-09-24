@@ -5,7 +5,10 @@ from .views import (
     PortfolioDetailView,
     PortfolioDeleteUpdateView,
     PortfolioDeleteView,
-    DividendPortfolioView
+    DividendCalculatorView,
+    DividendCalculatorListView,
+    DividendCalculatorReportView,
+    ReportDeleteView
 )
 
 urlpatterns = [
@@ -14,5 +17,8 @@ urlpatterns = [
     path('edit/<int:pk>/', PortfolioDeleteUpdateView.as_view(), name='portfolio_edit'),
     path('<int:pk>/delete/', PortfolioDeleteView.as_view(), name='portfolio_delete'),
     path('<int:pk>/', PortfolioDetailView.as_view(), name='portfolio_detail'),
-    # path('dividend_calculator/', DividendPortfolioView.as_view(), name='portfolio_create'),
+    path('dividend_calculator/create', DividendCalculatorView.as_view(), name='portfolio_calculator'),
+    path('dividend_calculator/view_list/', DividendCalculatorListView.as_view(), name='portfolio_calculator_list_view'),
+    path('dividend_calculator/view/<int:pk>', DividendCalculatorReportView.as_view(), name='portfolio_calculator_detailt_view'),
+    path('dividend_calculator/delete/<int:pk>', ReportDeleteView.as_view(), name='report_delete'),
 ]

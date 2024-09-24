@@ -3,17 +3,69 @@
 {% block title %}Dividend Calculator{% endblock %}
 {% block content %}
 
-<h1>Example Form</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-</form>
 
-{% if dividends_table %}
-<div>
-    {{ dividends_table|safe }}
-</div>
+<section id="divi-cal-page"></section>
 
-{% endif %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <!-- Dividend Calculator part -->
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="mb-0 oswald-reg fs-25">Dividend Calculator</h3>
+              </div>
+              <div class="card-body">
+                <form id="divid-cal-form" method="post">
+                    {% csrf_token %}
+                  <div class="mb-3">
+                    <label for="initial-capital" class="form-label oswald-reg fs-16">Initial Capital:</label>
+                    {{form.capital}}
+                  </div>
+                  <div class="mb-3">
+                    <label for="share-name" class="form-label oswald-reg fs-16">Share Name:</label>
+                    {{form.ticket_name}}
+                  </div>
+                  <div class="mb-3">
+                    <label for="lookback-period" class="form-label oswald-reg fs-16">Lookback Period:</label>
+                    {{form.lookback_period}}
+                  </div>
+                  <div class="mb-3">
+                    <label for="calculation-period" class="form-label oswald-reg fs-16">Calculation Period:</label>
+                    {{form.calculation_period}}
+                  </div>
+                  <div class="d-flex justify-content-center">
+                    <button type="submit" class="cta-btn" value="validate" name="action" >Calculate</button>
+                    {% if dividends_table %}
+                        <button type="submit" value="save" name="action" class="cta-btn">Generate Report</button>
+                    {% endif %}
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </form>
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">
+              {{ form.non_field_errors }}
+          </div>
+      {% endif %}
+        {% if dividends_table %}
+           <!-- Dividend Payment Details Section -->
+        <div class="col-lg-8">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="mb-0 oswald-reg fs-22">Dividend Payment Details</h3>
+              </div>
+              <div class="card-body">
+                {{ dividends_table|safe }}
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+        </div>
+    </div>
+</section>
+
+
 {% endblock %}

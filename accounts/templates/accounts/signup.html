@@ -25,36 +25,47 @@
                 <form method="post">
                     {% csrf_token %}
                     <div class="input-group">
-                        {{form.name}}
                         
+                        {{form.name}}
                         <small id="uNameErr"></small>
                     </div>
                     
                     <div class="input-group">
+                        
+                        {% if form.email.errors %}
+
+                        {% for error in form.email.errors %}
+                            <small id="emailErr">{{ error }}</small>
+                        {% endfor %}
+
+                        {% endif %}
                         {{form.email}}
-                        <small id="emailErr"></small>
                     </div>
                     <small>{{ form.password1.help_text }}</small>
                     <div class="input-group">
-                        {{form.password1}}
+                        
                         
                         {% if form.password1.errors %}
 
                         {% for error in form.password1.errors %}
                             <small id="passErr">{{ error }}</small>
                         {% endfor %}
-
                         {% endif %}
+                        {{form.password1}}
                     </div>
                     
                     <div class="input-group">
-                        {{form.password2}}
+                        
                         {% if form.password2.errors %}
-
-                        {% for error in form.password2.errors %}
-                        <small id="rePassErr">{{ error }}</small>
-                        {% endfor %}
+                        <small>
+                          <ul>
+                          {% for error in form.password2.errors %}
+                          <li id="rePassErr">{{ error }}</li>
+                          {% endfor %}
+                        </ul>
                         {% endif %}
+                        {{form.password2}}
+                      </small>
                     </div>
   
                     <button type="submit">Sign up</button>

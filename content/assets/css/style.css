@@ -718,3 +718,7 @@ span{
   /* ==========================
     Confirm delete diaglog end
 ======================== */
+
+#rePassErr {
+    color: red;
+}

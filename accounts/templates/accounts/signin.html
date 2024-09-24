@@ -29,16 +29,17 @@
               <div class="contact-form">
                 <form method="post">
                     {% csrf_token %}
+
                     <div class="input-group">
                         {{form.email}}
-                        <small id="uEmailErr"></small>
                     </div>
   
                     <div class="input-group">
                         {{form.password}}
-                        <small id="passErr"></small>
                     </div>
-  
+                    {% if form.non_field_errors %}
+                    <small class="text-danger">{{ form.non_field_errors }}</small>
+                {% endif %}
                     <button type="submit">Sign in</button>
 
                     <div class="form-footer mt-10">

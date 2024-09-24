@@ -30,6 +30,7 @@ class SignInView(FormView):
             login(self.request, user)
             return super().form_valid(form)
         else:
+            form.add_error(None, "Invalid email or password")
             return self.form_invalid(form)
         
     def get_success_url(self):

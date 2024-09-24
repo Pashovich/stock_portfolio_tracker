@@ -84,7 +84,6 @@ class DividendCalculatorListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         reports = DividendCalculation.objects.filter(user=self.request.user)
-        print(reports)
         return reports
 
 @method_decorator(paid_user_required, name='dispatch')
@@ -95,7 +94,6 @@ class DividendCalculatorView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form: DividendPortfolioForm):
         context = self.get_context_data()
-        print("ACTION", self.request.POST.get('action'))
         cache_key = md5(str(form.cleaned_data).encode('utf-8')).hexdigest()
         dividends_data = cache.get(f'div_calc_{cache_key}')
         if self.request.POST.get('action') == 'validate' and form.check_ticker_name():

@@ -44,7 +44,8 @@
 
           <div class="d-flex justify-content-center">
             <a href="{% url 'portfolio_calculator_list_view' %}"><button class="btn btn-secondary">Back to Reports</button></a>
-            <button class="btn btn-info" onclick="downloadReport()">Download Report</button>
+            <!-- <button class="btn btn-info" onclick="downloadReport()">Download Report</button> -->
+            <a href="{% url 'dividend_report_download' report.id %}" class="btn btn-primary">Download Report</a>
             <button class="cta-btn" id="delete-button">Delete Portfolio</button>
             <div id="confirmation-dialog" class="confirmation-dialog">
                 <p>{{ delete_confirmation_message }}</p>

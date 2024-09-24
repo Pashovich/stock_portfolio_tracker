@@ -18,11 +18,26 @@ from .forms import PortfolioForm, ShareForm, DividendPortfolioForm
 from .utils import *
 from django.core.cache import cache
 from hashlib import md5
-
+from django.views import View
+from pathlib import Path
 
 from datetime import datetime
 
+@method_decorator(paid_user_required, name='dispatch')
+class DividendReportDownload(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        # Fetch the DividendCalculation object based on the provided primary key (pk)
+        try:
+            dividend_calculation = DividendCalculation.objects.get(pk=pk)
+        except DividendCalculation.DoesNotExist:
+            return HttpResponse("DividendCalculation not found.", status=404)
 
+        buffer = create_dividend_report(dividend_calculation)
+        filename = f"dividend_report_{pk}.pdf"
+        response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+    
 @method_decorator(paid_user_required, name='dispatch')
 class ReportDeleteView(LoginRequiredMixin, DeleteView):
     model = DividendCalculation

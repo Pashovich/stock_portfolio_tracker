@@ -1,0 +1,16 @@
+# Ignore Python cache files
+__pycache__
+*.pyc
+*.pyo
+
+# Ignore virtual environments
+venv/
+env/
+
+# Ignore local configuration files
+.git
+.gitignore
+
+# Ignore build artifacts
+build/
+dist/

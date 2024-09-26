@@ -26,9 +26,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-i(9g0tocd3)wyo)451h=7y*-k_u3ah6y6n8nnl74dbwg9-9mh5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.getenv('DEBUG') == '1':
+    DEBUG = True
+else:
+    DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 
 # Application definition
@@ -53,9 +56,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 ROOT_URLCONF = 'app.urls'
 
+CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS").split(" ")
 CONTENT_DIR = BASE_DIR / 'content'
 TEMPLATES = [
     {
@@ -75,6 +78,7 @@ TEMPLATES = [
 
 # STATIC_ROOT = join(CONTENT_DIR, "static")
 STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = CONTENT_DIR / 'media'
@@ -84,10 +88,6 @@ STATICFILES_DIRS = [
 ]
 
 
-# STATIC_URL = '/static/'
-# STATICFILES_DIRS = [
-#     join(BASE_DIR, 'content/static'),  # Global static directory
-# ]
 
 WSGI_APPLICATION = 'app.wsgi.application'
 

@@ -15,5 +15,9 @@ echo "Running migrations..."
 python manage.py migrate
 
 # Start the Django server
+echo "Generating statics..."
+python manage.py collectstatic --no-input --clear
+
 echo "Starting server..."
-python manage.py runserver 0.0.0.0:8000
+gunicorn app.wsgi:application --bind 0.0.0.0:8000
+# python manage.py runserver 0.0.0.0:8000

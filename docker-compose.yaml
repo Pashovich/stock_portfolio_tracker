@@ -6,7 +6,7 @@ services:
     container_name: django_app
     command: sh -c "/entrypoint.sh" 
     ports:
-      - "8000:8000" 
+      - "${DJANGO_PORT}:8000" 
     env_file:
      - .env
     environment:
@@ -20,6 +20,7 @@ services:
       - redis
     volumes:
       - .:/app  
+      - static_volume:/app/staticfiles
 
   db:
     image: postgres:15-alpine
@@ -43,6 +44,17 @@ services:
     volumes:
       - ./redis_data:/data  
 
+  nginx:
+    build: ./nginx
+    volumes:
+      - static_volume:/app/staticfiles
+    env_file:
+      - .env
+    ports:
+      - "${NGINX_PORT}:80"
+    depends_on:
+      - web
 volumes:
   postgres_data:
   redis_data:
+  static_volume:

@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 
 class CustomUserManager(BaseUserManager):
+    use_in_migrations = True
     def create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError('The Email field must be set')

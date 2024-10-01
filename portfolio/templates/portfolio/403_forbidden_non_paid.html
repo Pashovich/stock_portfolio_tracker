@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}403 Forbidden{% endblock %}
+{% block content %}
+{% load static %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1>403 Forbidden</h1>
+            <p>Sorry, this page is only accessible to paid users.</p>
+            {% if status %}
+                <p>{{ status }}</p>
+                {% else %}
+                <form method="post">
+                    {% csrf_token %}
+                    <button class="cta-btn" id="detail-edit-port-btn">Apply for paid status</button>
+                </form>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

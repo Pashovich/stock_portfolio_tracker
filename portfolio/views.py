@@ -170,6 +170,7 @@ class PortfolioDetailView(LoginRequiredMixin, DetailView):
         return context
 
 class PortfolioCreateView(LoginRequiredMixin, TemplateView):
+    #TODO update for portfolio review before create
     template_name = "portfolio/portfolio_create.html"
 
     def get(self, *args, **kwargs):

@@ -9,7 +9,8 @@ from .views import (
     DividendCalculatorListView,
     DividendCalculatorReportView,
     ReportDeleteView,
-    DividendReportDownload
+    DividendReportDownload,
+    ForbiddenForNonPaid
 )
 
 urlpatterns = [
@@ -23,4 +24,5 @@ urlpatterns = [
     path('dividend_calculator/download/<int:pk>', DividendReportDownload.as_view(), name='dividend_report_download'),
     path('dividend_calculator/view/<int:pk>', DividendCalculatorReportView.as_view(), name='portfolio_calculator_detailt_view'),
     path('dividend_calculator/delete/<int:pk>', ReportDeleteView.as_view(), name='report_delete'),
+    path('non-paid-403/', ForbiddenForNonPaid.as_view(), name='non_paid_403')
 ]

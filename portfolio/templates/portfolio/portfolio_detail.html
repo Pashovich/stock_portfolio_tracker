@@ -50,6 +50,7 @@
               <div class="detail-view-btn-area">
                 <a href="{% url 'portfolio_list' %}"><button class="btn btn-secondary">Back to Reports</button></a>
                 <form action="{% url 'portfolio_edit' portfolio.id %}" method="get">
+                  {% csrf_token %}
                     <button class="cta-btn" id="detail-edit-port-btn">Edit Portfolio</button>
                 </form>
                 <button class="cta-btn" id="delete-button">Delete Portfolio</button>

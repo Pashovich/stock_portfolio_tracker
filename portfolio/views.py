@@ -13,7 +13,7 @@ from django.utils.decorators import method_decorator
 from django.http import JsonResponse, HttpResponse
 from .permissions import paid_user_required
 
-from .models import Portfolio, Share, DividendCalculation
+from .models import Portfolio, Share, DividendCalculation, PaidRequests
 from .forms import PortfolioForm, ShareForm, DividendPortfolioForm
 from .utils import *
 from django.core.cache import cache
@@ -309,3 +309,24 @@ class PortfolioDeleteView(LoginRequiredMixin, DeleteView):
         "portfolio_list"
     )
     template_name = "portfolio/portfolio_confirm_delete.html"
+
+class ForbiddenForNonPaid(LoginRequiredMixin, TemplateView):
+    model = Portfolio
+    template_name = "portfolio/403_forbidden_non_paid.html"
+
+    def get(self, *args, **kwargs):
+        if self.request.user.is_paid:
+            return redirect('index')
+        
+        has_paid_requests = PaidRequests.objects.filter(user=self.request.user).exists()
+        if has_paid_requests:
+            return self.render_to_response({'status' : 'Awaiting approval'}, status=403)
+        else:
+            return self.render_to_response({'status' : None}, status=403)
+
+    def post(self, *args, **kwargs):
+        if self.request.user.is_paid:
+            return redirect('index')
+        
+        PaidRequests.objects.create(user=self.request.user)
+        return self.render_to_response({'status' : 'Awaiting approval'}, status=403)

@@ -1,0 +1,152 @@
+@media (max-width: 575px)
+{
+    .navbar{
+        top: 0;
+    }
+    .navbar-toggler{
+        padding: 5px !important;
+    }
+    .navbar .navbar-nav{
+        background: #b3d6d3;
+        text-align: center;
+    }
+    .navbar-light .navbar-toggler {
+        border-color: #e23e38;
+        color:#93eee2;
+    }
+    .navbar-expand-lg .navbar-nav .nav-link {
+        padding-left: 0 !important;
+        font-size: 16px !important;
+    }
+    /* navbar css ends */
+    #banner .banner-slider .banner-item .banner-content .banner-text h1 {
+          padding: 40px 10px !important;
+          text-shadow: 2px 2px 0px #570dc8 !important;
+          font-size: 24px !important;
+    }
+    .cta-btn{
+        padding: 0px 10px !important;
+        font-size: 13px !important;
+    }
+    /* banner css ends */
+    #about {
+        padding-top: 30px !important;
+      }
+  
+    #about .about-text h3 {
+        padding-bottom: 15px !important;
+        padding-top: 20px !important;
+        }
+   #team-title 
+   {
+      padding-top: 30px !important;
+      padding-bottom: 30px !important;
+   }
+   #team {
+    padding-bottom: 30px !important;
+  }
+  #team .team .team-item .team-text p {
+    opacity: 1 !important;
+  }
+  #banner .banner-slider .banner-item .banner-content .banner-text h2 {
+    padding: 190px 0px !important;
+  }
+  button{
+    margin-left: 25px !important;
+  }
+  #banner .banner-item {
+    height: 650px !important;
+  }
+  #contact .contact-title h1 {
+    padding-top: 70px !important;
+  }
+  #contact .contact-form {
+    padding-top: 50px !important;
+    display: block;
+  }
+  .con-center{
+    text-align: center;
+  }
+}
+/* ==========================
+      extra-small device ends
+======================== */
+@media (min-width: 576px) and (max-width: 767px)
+{
+ 
+    .navbar-toggler{
+        padding: 5px !important;
+    }
+    .navbar .navbar-nav{
+        background: #b3d6d3;
+        text-align: center;
+    }
+    .navbar-light .navbar-toggler {
+        border-color: #e23e38;
+        color:#93eee2;
+    }
+    .navbar-expand-lg .navbar-nav .nav-link {
+        padding-left: 0 !important;
+        font-size: 16px !important;
+    }
+    /* navbar css ends */
+    #banner .banner-slider .banner-item .banner-content .banner-text h2 {
+        padding: 250px 0px !important;
+      }
+    #team .team .team-item .team-text p {
+        opacity: 1 !important;
+      }
+      #create-share-btn{
+        display: flex;
+        justify-content: flex-end;
+      }
+      .cta-btn{
+        padding: 0px 10px !important;
+        font-size: 13px !important;
+    }
+    #banner .banner-slider .banner-item .banner-content .banner-text h2 {
+        padding: 170px 0px !important;
+      }
+      #about {
+        padding-top: 30px !important;
+      }
+  
+    #about .about-text h3 {
+        padding-bottom: 15px !important;
+        padding-top: 20px !important;
+        }
+        .divi-btn-help{
+            display: flex !important;
+            justify-content: flex-start !important;
+        }
+}
+/* ==========================
+    small device ends
+======================== */
+@media (min-width: 768px) and (max-width: 991px)
+{
+ 
+    .navbar-toggler{
+        padding: 5px !important;
+    }
+    .navbar .navbar-nav{
+        background: #b3d6d3;
+        text-align: center;
+    }
+    .navbar-light .navbar-toggler {
+        border-color: #e23e38;
+        color:#93eee2;
+    }
+    .navbar-expand-lg .navbar-nav .nav-link {
+        padding-left: 0 !important;
+        font-size: 16px !important;
+    }
+    /* navbar css ends */
+    #team .team .team-item .team-text p {
+        opacity: 1 !important;
+      }
+      button{
+        margin-left: 120px;
+      }
+   
+}

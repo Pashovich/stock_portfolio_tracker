@@ -23,6 +23,7 @@ from pathlib import Path
 
 from datetime import datetime
 
+
 @method_decorator(paid_user_required, name='dispatch')
 class DividendReportDownload(LoginRequiredMixin, View):
     def get(self, request, pk):
@@ -34,10 +35,12 @@ class DividendReportDownload(LoginRequiredMixin, View):
 
         buffer = create_dividend_report(dividend_calculation)
         filename = f"dividend_report_{pk}.pdf"
-        response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+        response = HttpResponse(
+            buffer.getvalue(), content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="{filename}"'
         return response
-    
+
+
 @method_decorator(paid_user_required, name='dispatch')
 class ReportDeleteView(LoginRequiredMixin, DeleteView):
     model = DividendCalculation
@@ -47,6 +50,7 @@ class ReportDeleteView(LoginRequiredMixin, DeleteView):
 
     def get(self, request, *args, **kwargs):
         return redirect('portfolio_calculator_list_view')
+
 
 @method_decorator(paid_user_required, name='dispatch')
 class DividendCalculatorReportView(LoginRequiredMixin, DetailView):
@@ -76,6 +80,7 @@ class DividendCalculatorReportView(LoginRequiredMixin, DetailView):
         )
         return context
 
+
 @method_decorator(paid_user_required, name='dispatch')
 class DividendCalculatorListView(LoginRequiredMixin, ListView):
     template_name = "portfolio/dividend_calculator_list_view.html"
@@ -85,6 +90,7 @@ class DividendCalculatorListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         reports = DividendCalculation.objects.filter(user=self.request.user)
         return reports
+
 
 @method_decorator(paid_user_required, name='dispatch')
 class DividendCalculatorView(LoginRequiredMixin, FormView):
@@ -105,7 +111,8 @@ class DividendCalculatorView(LoginRequiredMixin, FormView):
                 context['dividends_table'] = data.to_html(
                     classes='table table-striped', index=False, justify='left')
                 context['form'] = form
-                cache.set(f'div_calc_{cache_key}', dividends_data, timeout=1200)
+                cache.set(f'div_calc_{cache_key}',
+                          dividends_data, timeout=1200)
             else:
                 return super().form_invalid(form)
 
@@ -123,23 +130,26 @@ class DividendCalculatorView(LoginRequiredMixin, FormView):
 
         return super().form_invalid(form)
 
+
 class PortfolioListView(LoginRequiredMixin, ListView):
     model = Portfolio
     template_name = "portfolio/portfolio_list.html"
     context_object_name = "portfolios"
 
     def get_queryset(self):
-        portfolios =  Portfolio.objects.filter(user=self.request.user)
+        portfolios = Portfolio.objects.filter(user=self.request.user)
 
         for portfolio in portfolios:
             shares: list[type[Share]] = portfolio.shares.all()
-            profit = 0 
+            profit = 0
             for share in shares:
                 current_price = get_current_price(share)
-                profit = round(float((current_price * share.qty)) - float((share.price * share.qty)), 3)
+                profit = round(float((current_price * share.qty)) -
+                               float((share.price * share.qty)), 3)
 
             setattr(portfolio, "profit", profit)
         return portfolios
+
 
 class PortfolioDetailView(LoginRequiredMixin, DetailView):
     model = Portfolio
@@ -157,19 +167,22 @@ class PortfolioDetailView(LoginRequiredMixin, DetailView):
 
             share_data = {
                 "current_price": current_price,
-                "upcoming_dividends": [{'cash_amount': div['cash_amount'], 'pay_date': div['pay_date'], 'amount_payable' : round(share.qty * div['cash_amount'],3)} for div in upcoming_dividends],
+                "upcoming_dividends": [{'cash_amount': div['cash_amount'], 'pay_date': div['pay_date'], 'amount_payable': round(share.qty * div['cash_amount'], 3)} for div in upcoming_dividends],
                 "profit": round(float((current_price * share.qty)) - float((share.price * share.qty)), 3)
             }
             setattr(share, "data", share_data)
 
-        context['profit_overall'] = round(sum([share.data.get('profit',0) for share in shares]),3)
+        context['profit_overall'] = round(
+            sum([share.data.get('profit', 0) for share in shares]), 3)
         context["shares"] = shares
         context["delete_confirmation_message"] = _(
             "Are you sure you want to delete this portfolio?"
         )
         return context
 
+
 class PortfolioCreateView(LoginRequiredMixin, TemplateView):
+    # TODO update for portfolio review before create
     template_name = "portfolio/portfolio_create.html"
 
     def get(self, *args, **kwargs):
@@ -198,7 +211,9 @@ class PortfolioCreateView(LoginRequiredMixin, TemplateView):
             ShareFormSet = modelformset_factory(Share, form=ShareForm, extra=1)
             formset = ShareFormSet(self.request.POST)
             if portfolio_form.is_valid() and formset.is_valid():
-                return JsonResponse({"success": True})
+                return JsonResponse({"success": True,
+                                     'name': portfolio_form.cleaned_data['name'],
+                                     'shares': [form.cleaned_data for form in formset]})
 
             errors = {}
             for form in formset:
@@ -230,6 +245,7 @@ class PortfolioCreateView(LoginRequiredMixin, TemplateView):
                     for field, error_list in form.errors.items():
                         errors[f"errors-step2_{form.prefix}_{field}"] = error_list
                 return HttpResponse()
+
 
 class PortfolioDeleteUpdateView(PortfolioCreateView):
     template_name = "portfolio/portfolio_create.html"
@@ -303,12 +319,14 @@ class PortfolioDeleteUpdateView(PortfolioCreateView):
                         errors[f"errors-step2_{form.prefix}_{field}"] = error_list
                 return HttpResponse()
 
+
 class PortfolioDeleteView(LoginRequiredMixin, DeleteView):
     model = Portfolio
     success_url = reverse_lazy(
         "portfolio_list"
     )
     template_name = "portfolio/portfolio_confirm_delete.html"
+
 
 class ForbiddenForNonPaid(LoginRequiredMixin, TemplateView):
     model = Portfolio
@@ -317,16 +335,17 @@ class ForbiddenForNonPaid(LoginRequiredMixin, TemplateView):
     def get(self, *args, **kwargs):
         if self.request.user.is_paid:
             return redirect('index')
-        
-        has_paid_requests = PaidRequests.objects.filter(user=self.request.user).exists()
+
+        has_paid_requests = PaidRequests.objects.filter(
+            user=self.request.user).exists()
         if has_paid_requests:
-            return self.render_to_response({'status' : 'Awaiting approval'}, status=403)
+            return self.render_to_response({'status': 'Awaiting approval'}, status=403)
         else:
-            return self.render_to_response({'status' : None}, status=403)
+            return self.render_to_response({'status': None}, status=403)
 
     def post(self, *args, **kwargs):
         if self.request.user.is_paid:
             return redirect('index')
-        
+
         PaidRequests.objects.create(user=self.request.user)
-        return self.render_to_response({'status' : 'Awaiting approval'}, status=403)
+        return self.render_to_response({'status': 'Awaiting approval'}, status=403)

@@ -74,7 +74,7 @@
 
                                     <div class="row mt-3">
                                         <div class="col-md-4">
-                                            <label for="amount" class="form-label">Amount</label>
+                                            <label for="qty" class="form-label">Quantity</label>
                                             <div class="error-container" id="errors-step2_form-__prefix___qty"></div>
                                             <input type="number" name="form-__prefix__-qty" class="form-control" placeholder="Qty" id="id_form-__prefix__-qty">
                                         </div>
@@ -111,7 +111,7 @@
 
                                         <div class="row mt-3">
                                             <div class="col-md-4">
-                                                <label for="amount" class="form-label">Amount</label>
+                                                <label for="amount" class="form-label">Quantity</label>
                                                 <div class="error-container" id="errors-step2_{{ form.prefix }}_qty"></div>
                                                 {{form.qty}}
                                                 {{ form.id }}
@@ -124,19 +124,19 @@
                                 </div>
                             {% endfor %}
                         </div>
-
+                        <div id="create-share-btn">
                         <button type="button" class="btn btn-secondary" id="addShareBtn">Add Share</button>
                         <button type="button" class="btn btn-primary next-step">Next</button>
                         <button type="button" class="btn btn-outline-secondary prev-step">Back</button>
-
+                    </div>
                     </div>
 
                     <!-- Step 3: Review and Save your share-->
                     <div class="step" id="step3" style="display:none;">
-                        <h5>Review Your Portfolio Details</h5>
+                        <h5 class="mb-4 oswald-bold text-success">Review Your Portfolio Details</h5>
                         <div id="reviewContainer"></div>
                         <button type="submit" class="btn btn-success">Save Portfolio</button>
-                        <button type="button" class="btn btn-outline-secondary prev-step">Back</button>
+                        <button type="button" class="btn btn-info prev-step">Back</button>
                     </div>
                 </form>
             </div>

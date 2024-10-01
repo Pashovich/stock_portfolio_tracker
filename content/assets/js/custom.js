@@ -289,6 +289,26 @@ function displayErrors(stepNumber, errors) {
 }
 //create portfoilo page function are here
 
+
+function updateReviewSection(name, shares) {
+    let reviewHTML = `<h5>Portfolio Name: ${name}</h5><hr/>`;
+    shares.forEach(function(data, index) {
+        reviewHTML += `
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Share ${index + 1}</h5>
+                    <p>Share Name: ${data.name}</p>
+                    <p>Purchase Price: ${data.price}</p>
+                    <p>Purchase Date: ${data.date_of_purchase}</p>
+                    <p>Quantity: ${data.qty}</p>
+                </div>
+            </div>
+        `;
+    });
+    document.getElementById('reviewContainer').innerHTML = reviewHTML;
+}
+
+
 document.addEventListener('DOMContentLoaded', function () {
     // Handle navigation between steps
     const form = document.getElementById('portfolioForm');
@@ -320,9 +340,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         nextStep.style.display = 'block';
                         currentStepInput.value = stepNumber + 1; // Update the step value
                         updateProgressBar(nextStep);
+                        if (nextStep.id === 'step3') {
+                            updateReviewSection(data.name, data.shares);
+                        }
                     }
                 } else {
-                    console.log("DISPLAYING ERRORS");
                     displayErrors(stepNumber, data.errors);
                 }
             })
@@ -351,7 +373,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll(`[id^="errors-step${stepNumber}_"]`).forEach(container => {
             container.innerHTML = ''; // Clear the container
         });
-        console.log(errors);
         // Iterate over the errors object
         for (const [errorId, errorList] of Object.entries(errors)) {
             // Find the appropriate error container

@@ -437,7 +437,7 @@ body {
     footer css ends
 ======================== */
 #contact{
-    background: var(--cl4);
+    background: #cccccc;
 }
 
 #contact .contact-title h1{
@@ -546,6 +546,7 @@ span{
     color: var(--cl4);
 }
 .progress-bar {
+    background-color: #3bf4db;
     transition: all linear 0.4s;
     -webkit-transition: all linear 0.4s;
     -moz-transition: all linear 0.4s;

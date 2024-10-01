@@ -4,32 +4,46 @@
 {% block content %}
 {% load static %}
 
-<!-- banner starts -->
-
-<section id="banner">
-  <div class="banner-slider">
-      <div class="banner-item bg4">
-          <div class="container">
-              <div class="row">
-                  <div class="col-lg-6 m-auto">
-                      <div class="banner-content text-center">
-                          <div class="banner-text">
-                              <h2 class="mb-0 oswald-bold fs-40 text-uppercase text-white">Welcome to Stock Portfolio Tracker</h2>
-                          </div>
-                          <div class="banner-btn text-center">
-                            <a href="{% url 'portfolio_list' %}" class="cta-btn text-white oswald-med fs-16 text-uppercase">View Portfolios</a>
-                            <a href="{% url 'portfolio_calculator' %}" class="cta-btn text-white oswald-med fs-16 text-uppercase">Calculate Dividends</a>
-                        </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>        
+<section id="team-title"></section>
+  <div class="container">
+    <div class="team-title text-center">
+      <h1 class="mb-0 oswald-reg fs-22 text-uppercase">our instructor</h1>
+      <img src="{% static 'images/title-icon.jpg' %}" alt="team-icon">
+    </div>
   </div>
 </section>
-
-<!-- banner ends -->
-
+<!-- team title ends -->
+<!-- team details starts -->
+<section id="team">
+  
+  <div class="container team">
+    <div class="row">
+      <div class="col-lg-4 m-auto">
+        <div class="team-item">
+          <div class="team-img position-relative text-center">
+            <img src="{% static 'images/instructor.jpg' %}" class="img-fluid w-100" alt="team-member">
+            <div class="team-overlay">
+              <div class="team-icon d-flex flex-column align-items-end">
+                <ul>
+                  <li><a href="#"><i class="fab fa-facebook-f fs-16 text-white"></i></a></li>
+                  <li><a href="#"><i class="fab fa-twitter fs-16 text-white"></i></a></li>
+                  <li><a href="#"><i class="fab fa-linkedin-in fs-16 text-white"></i></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="team-text text-center">
+            <h3 class="mb-0 oswald-reg fs-14 text-uppercase">DR SAI KIRAN LAKKARAJU</h3>
+            <h4 class="mb-0 oswald-reg fs-14 text-capitalize">DISCIPLINE HEAD - IT, COURSE DIRECTOR - BIT & MIT</h4>
+            <h4 class="mb-0 oswald-reg fs-14 text-capitalize">B.SC., M.SC., M.SC. (HONOURS), PH.D., GRAD CERT ED</h4>
+            <p class="mb-0 open-reg fs-13"> Dr. Sai Kiran Lakkaraju is our instructor for doing this ICT Engaged project.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</section>
 <!-- team starts -->
 <section id="team-title">
   <div class="container">

@@ -25,16 +25,18 @@
                 <thead>
                     <tr>
                         <th>Payment Date</th>
-                        <th>Average Dividend Yield</th>
+                        <th>Avg. Return on share</th>
                         <th>Payment Amount</th>
+                        <th>Average Dividend Yield</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in data %}
                     <tr>
                         <td>{{ item.payment_date }}</td>
-                        <td>{{ item.avg_dividend_yield }}</td>
+                        <td>{{ item.avg_dividend }}</td>
                         <td>{{ item.payment_amount }}</td>
+                        <td>{{ item.avg_dividend_yield }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

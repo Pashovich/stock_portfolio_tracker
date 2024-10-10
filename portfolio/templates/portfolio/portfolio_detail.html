@@ -37,11 +37,34 @@
                 <div class="card-body">
                   <h5 class="card-title mb-0 oswald-bold fs-22">Share: <span class="detail-view-text">{{ share.name }}</span></h5>
                   <p class="card-text oswald-reg fs-16">Purchase Price: <span class="detail-view-text">{{ share.price }}</span></p>
-                  <p class="card-text oswald-reg fs-16">Amount: <span class="detail-view-text">{{ share.qty }}</span></p>
+                  <p class="card-text oswald-reg fs-16">Quantity: <span class="detail-view-text">{{ share.qty }}</span></p>
                   <p class="card-text oswald-reg fs-16">Date of Purchase: <span class="detail-view-text">{{ share.date_of_purchase }}</span></p>
                   <p class="card-text oswald-reg fs-16">Current Price: <span class="detail-view-text">{{ share.data.current_price }}</span></p>
-                  <p class="card-text oswald-reg fs-16">Upcoming Dividend Yield <span class="detail-view-text">{{ share.data.upcoming_dividends }}</span></p>
                   <p class="card-text oswald-reg fs-16">Profit/Loss: <span class="detail-view-text">{{ share.data.profit }}</span></p>
+                  <p class="card-text oswald-reg fs-16">Upcoming Dividend Yield <span class="detail-view-text"></span></p>
+                  
+                  {% if share.data.upcoming_dividends %}
+                  <div class="container mt-4">
+                    <table class="table table-striped table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Amount per share</th>
+                                <th>Pay Date</th>
+                                <th>Amount Payable</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in share.data.upcoming_dividends %}
+                            <tr>
+                                <td>{{ item.cash_amount }}</td>
+                                <td>{{ item.pay_date }}</td>
+                                <td>{{ item.amount_payable }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
                 </div>
               </div>
               {% endfor %}

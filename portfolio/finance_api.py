@@ -45,3 +45,7 @@ class FinanceApi:
         stock = yf.Ticker(ticker_name)
         return stock.dividends
 
+    @staticmethod
+    def get_hist_data(ticker_name: str)-> DataFrame:
+        stock = yf.Ticker(ticker_name)
+        return stock.history(period='max')

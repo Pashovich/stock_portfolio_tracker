@@ -71,8 +71,9 @@ class DividendCalculatorReportView(LoginRequiredMixin, DetailView):
         for key in payment_details['date']:
             result_list.append({
                 'payment_date': payment_details['date'][key],
-                'avg_dividend_yield': payment_details['avg_div'][key],
-                'payment_amount': payment_details['dividends_return'][key]
+                'avg_dividend': round(payment_details['avg_div'][key],3),
+                'payment_amount': round(payment_details['dividends_return'][key],3),
+                'avg_dividend_yield': payment_details['avg_yield'][key]
             })
         context["data"] = result_list
         context["delete_confirmation_message"] = _(
@@ -107,7 +108,7 @@ class DividendCalculatorView(LoginRequiredMixin, FormView):
             if not data.empty:
                 dividends_data = data.to_dict()
                 data.columns = ['Est. Payment date',
-                                'Avg. Dididend yeild', 'Return on Capital $']
+                                'Avg. Return on share', 'Return on Capital $','Avg. Dididend yeild']
                 context['dividends_table'] = data.to_html(
                     classes='table table-striped', index=False, justify='left')
                 context['form'] = form
@@ -211,9 +212,10 @@ class PortfolioCreateView(LoginRequiredMixin, TemplateView):
             ShareFormSet = modelformset_factory(Share, form=ShareForm, extra=1)
             formset = ShareFormSet(self.request.POST)
             if portfolio_form.is_valid() and formset.is_valid():
-                return JsonResponse({"success": True,
+                data = {"success": True,
                                      'name': portfolio_form.cleaned_data['name'],
-                                     'shares': [form.cleaned_data for form in formset]})
+                                     'shares': [form.cleaned_data for form in formset]}
+                return JsonResponse(data)
 
             errors = {}
             for form in formset:
@@ -277,16 +279,23 @@ class PortfolioDeleteUpdateView(PortfolioCreateView):
             return JsonResponse({"success": False, "errors": errors})
 
         elif current_step == '2':
-            ShareFormSet = modelformset_factory(Share, form=ShareForm, extra=1)
+            portfolio_form = PortfolioForm(self.request.POST)
+            ShareFormSet = modelformset_factory(Share, form=ShareForm, extra=1, can_delete=True)
             formset = ShareFormSet(self.request.POST)
-            if form.is_valid() and formset.is_valid():
-                return JsonResponse({"success": True})
+
+            if portfolio_form.is_valid() and formset.is_valid():
+                data = {"success": True,
+                                     'name': portfolio_form.cleaned_data['name'],
+                                     'shares': [form.cleaned_data for form in formset]}
+                for item in data['shares']:
+                    if 'id' in item:  # Check if 'id' key exists
+                        del item['id']
+                return JsonResponse(data)
 
             errors = {}
             for form in formset:
                 for field, error_list in form.errors.items():
                     errors[f"errors-step2_{form.prefix}_{field}"] = error_list
-
             return JsonResponse({"success": False, "errors": errors})
         else:
             ShareFormSet = modelformset_factory(Share, form=ShareForm, extra=1)

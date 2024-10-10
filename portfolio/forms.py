@@ -96,7 +96,10 @@ class DividendPortfolioForm(forms.ModelForm):
         stock_price = FinanceApi.get_stock_price(ticker_name)
 
         shares = int(capital / stock_price)
+
         df['dividends_return'] = df['avg_div'] * shares
+        df['avg_yield'] = round((df['avg_div'] / stock_price) * 100,5)
+        df['avg_yield'] =  df['avg_yield'].astype('str') +'%'
         return df
 
 

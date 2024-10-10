@@ -432,11 +432,32 @@ document.addEventListener('DOMContentLoaded', function () {
     // Remove share form
     document.getElementById('sharesContainer').addEventListener('click', function(e) {
         if (e.target && e.target.classList.contains('remove-share')) {
-            e.target.closest('.share-card').remove();
+            const formCard = e.target.closest('.share-card');
+            const formIndex = Array.from(formCard.parentNode.children).indexOf(formCard);    
+            formCard.remove();
+            console.log(formCard);
+    
+            // Update total forms
             let totalForms = document.querySelector("#id_form-TOTAL_FORMS");
-            let formNum = parseInt(totalForms.value);
-            formNum--;
-            totalForms.value = formNum;
+            totalForms.value = parseInt(totalForms.value) - 1;
+    
+            // Update indices of remaining forms
+            const shareCards = document.querySelectorAll('#sharesContainer .share-card');
+            shareCards.forEach((card, index) => {
+                console.log(card);
+                const inputs = card.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    // Update the name and id attributes
+                    input.name = input.name.replace(/form-\d+/, `form-${index}`);
+                    input.id = input.id.replace(/id_form-\d+/, `id_form-${index}`);
+                });
+    
+                // Update error containers' IDs
+                const errorContainers = card.querySelectorAll('.error-container');
+                errorContainers.forEach(container => {
+                    container.id = container.id.replace(/errors-step2_form-\d+/, `errors-step2_form-${index}`);
+                });
+            });
         }
     });
 });
